@@ -1,0 +1,23 @@
+# Personal files
+*.mp4
+*.pdf
+*.jpg
+*.JPG
+*.NEF
+*.lnk
+*.ini
+*.jsx
+channels4_profile.jpg
+
+# Other projects (tracked separately)
+Conduit-Site/
+Courtside-Site/
+Courtside/
+courtside.html
+courtside - Copy.html
+courtside_deploy/
+code/
+relocation-app_2*
+
+# Claude internals
+.claude/

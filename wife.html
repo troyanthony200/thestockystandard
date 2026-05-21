@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HerDeals</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8F6F1;--card:#fff;--border:#E8E4DC;
+  --navy:#1B2A4A;--rose:#E91E8C;--green:#1a7a3c;
+  --muted:#666;--light:#f0ede6;--shadow:0 2px 8px rgba(0,0,0,.08);
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:#1a1a1a;min-height:100vh}
+button{font-family:'Outfit',sans-serif;cursor:pointer;border:none;background:none}
+a{text-decoration:none;color:inherit}
+
+/* HEADER */
+#hdr{background:var(--navy);color:#fff;padding:0 20px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+#hdr-inner{display:flex;align-items:center;gap:12px;height:54px}
+.logo{font-size:20px;font-weight:800;white-space:nowrap}.logo em{color:var(--rose);font-style:normal}
+#tabs{display:flex;flex:1;justify-content:center}
+.tab{color:rgba(255,255,255,.6);font-size:13px;font-weight:700;padding:0 18px;height:54px;border-bottom:3px solid transparent;transition:.15s}
+.tab.on{color:#fff;border-bottom-color:var(--rose)}
+.tab:hover{color:#fff}
+#hdr-right{display:flex;align-items:center;gap:8px;margin-left:auto}
+#wl-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:4px;padding:5px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
+.wl-n{background:var(--rose);border-radius:10px;padding:1px 6px;font-size:11px;font-weight:800}
+
+/* STATS */
+#stats{background:var(--navy);color:#fff;padding:7px 20px;border-top:1px solid rgba(255,255,255,.1)}
+#stats-inner{max-width:1400px;margin:0 auto;display:flex;gap:20px;flex-wrap:wrap}
+.stat{font-size:12px;display:flex;align-items:center;gap:5px}
+.stat b{font-size:14px;font-weight:800}
+.stat.hot b{color:#ff7043}.stat.penny b{color:#69f0ae}.stat.sz b{color:#f48fb1}
+
+/* FILTERS */
+#filters{background:#fff;border-bottom:2px solid var(--border);padding:10px 20px}
+#filters-inner{max-width:1400px;margin:0 auto}
+.frow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.frow:last-child{margin-bottom:0}
+.flabel{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.chips{display:flex;gap:5px;flex-wrap:wrap}
+.chip{background:var(--light);border:1px solid var(--border);border-radius:4px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:.12s;color:#1a1a1a}
+.chip:hover{border-color:var(--navy)}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+select.fsel{background:var(--light);border:1px solid var(--border);border-radius:4px;padding:4px 8px;font:11px 'Outfit',sans-serif;font-weight:700;cursor:pointer;color:#1a1a1a}
+.sort-wrap{margin-left:auto;display:flex;align-items:center;gap:6px}
+.sort-wrap label{font-size:11px;font-weight:700;color:var(--muted)}
+#clr-fashion,#clr-shoes{display:none;border:1px solid var(--rose);color:var(--rose);border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700}
+#clr-fashion.show,#clr-shoes.show{display:inline-flex}
+#clr-fashion:hover,#clr-shoes:hover{background:var(--rose);color:#fff}
+
+/* MAIN */
+#main{max-width:1400px;margin:0 auto;padding:18px 20px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:14px}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;box-shadow:var(--shadow);transition:box-shadow .2s,transform .15s}
+.card:hover{box-shadow:0 4px 18px rgba(0,0,0,.11);transform:translateY(-1px)}
+.card-top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 6px}
+.store-tag{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.d-amz{background:#ff9900}.d-new{background:#e2611b}.d-wmt{background:#0071ce}.d-oth{background:#1a7a3c}
+.score{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:2.5px solid;flex-shrink:0}
+.sc-lo{color:#999;border-color:#ccc;background:#f5f5f5}
+.sc-md{color:#c17f00;border-color:#f0ad00;background:#fffbe6}
+.sc-hi{color:#1a7a3c;border-color:#5cb85c;background:#f0fff4}
+.sc-ht{color:#fff;border-color:var(--rose);background:var(--rose)}
+.thumb{width:100%;height:100px;object-fit:contain;background:#f9f9f9;padding:6px}
+.no-thumb{width:100%;height:100px;background:var(--light);display:flex;align-items:center;justify-content:center;font-size:32px}
+.card-body{padding:10px 12px;flex:1}
+.ctitle{font-size:13px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:7px}
+.prices{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:7px}
+.sale{font-size:20px;font-weight:800;color:var(--green)}
+.orig{font-size:12px;color:var(--muted);text-decoration:line-through}
+.pct{background:var(--rose);color:#fff;border-radius:3px;padding:2px 5px;font-size:11px;font-weight:800}
+.badges{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
+.badge{border-radius:3px;padding:2px 6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.2px}
+.b-penny{background:var(--rose);color:#fff}
+.b-clear{background:#7b2d8b;color:#fff}
+.b-flash{background:#e65100;color:#fff}
+.b-coup{background:#0f6e3a;color:#fff}
+.b-size{background:var(--navy);color:#fff}
+.b-brand{background:var(--light);color:var(--navy);border:1px solid var(--border)}
+.coup-row{display:flex;align-items:center;gap:6px;background:var(--light);border:1px dashed var(--border);border-radius:4px;padding:4px 8px;margin-bottom:5px}
+.coup-code{font-family:monospace;font-size:12px;font-weight:800;color:var(--navy);flex:1}
+.copy-btn{background:var(--navy);color:#fff;border-radius:3px;padding:2px 8px;font-size:10px;font-weight:700}
+.meta{font-size:11px;color:var(--muted);margin-bottom:5px}
+.card-foot{padding:8px 12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px}
+.view-btn{flex:1;background:var(--rose);color:#fff;border-radius:4px;padding:7px 10px;font-size:12px;font-weight:800;text-align:center}
+.view-btn:hover{background:#c01474}
+.ico-btn{background:var(--light);border:1px solid var(--border);border-radius:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:.12s}
+.ico-btn:hover{background:var(--border)}
+.ico-btn.on{background:#fff0f6;border-color:var(--rose)}
+
+/* WATCHLIST PANEL */
+#wl-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150}
+#wl-overlay.open{display:block}
+#wl-panel{position:fixed;top:0;right:-370px;width:340px;height:100vh;background:var(--card);box-shadow:-4px 0 20px rgba(0,0,0,.15);z-index:200;transition:right .3s;display:flex;flex-direction:column;overflow-y:auto}
+#wl-panel.open{right:0}
+#wl-head{background:var(--navy);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
+#wl-head h3{font-size:15px;font-weight:800}
+#wl-x{color:#fff;font-size:18px;line-height:1}
+#wl-body{padding:14px;flex:1}
+.wli{background:var(--light);border-radius:6px;padding:9px 11px;margin-bottom:9px;display:flex;gap:9px;align-items:flex-start}
+.wli-info{flex:1;min-width:0}
+.wli-title{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.wli-price{font-size:14px;font-weight:800;color:var(--green)}
+.wli-store{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.wli-rm{color:var(--muted);font-size:15px;line-height:1;flex-shrink:0}
+.wli-rm:hover{color:var(--rose)}
+.wl-empty{text-align:center;color:var(--muted);padding:36px 16px;font-size:13px}
+
+/* ALERT MODAL */
+#al-modal{display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center}
+#al-modal.open{display:flex}
+#al-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+#al-box{position:relative;background:#fff;border-radius:8px;padding:22px;width:320px;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+#al-box h4{font-size:15px;font-weight:800;margin-bottom:5px}
+#al-box .al-sub{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:8px;line-height:1.3}
+#al-box .al-hint{font-size:11px;color:var(--muted);margin-bottom:12px}
+#al-input{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:4px;font:14px 'Outfit',sans-serif;font-weight:800;margin-bottom:10px}
+#al-input:focus{outline:none;border-color:var(--rose)}
+.al-btns{display:flex;gap:7px}
+.al-btns button{flex:1;padding:7px;border-radius:4px;font:13px 'Outfit',sans-serif;font-weight:700;cursor:pointer}
+#al-save{background:var(--rose);color:#fff;border:none}
+#al-cancel{background:var(--light);color:#1a1a1a;border:1px solid var(--border)}
+
+/* TOAST */
+#toasts{position:fixed;bottom:20px;right:20px;z-index:400;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.toast{background:var(--navy);color:#fff;border-radius:6px;padding:9px 14px;font-size:12px;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:tin .2s ease}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ALERT BANNER */
+#al-banner{display:none;background:#fff0f6;border-bottom:2px solid var(--rose);padding:8px 20px;font-size:12px;font-weight:600;color:#9c0060}
+#al-banner.open{display:block}
+
+/* EMPTY */
+.empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted)}
+.empty .ei{font-size:44px;margin-bottom:10px}
+.empty h3{font-size:17px;font-weight:800;color:#1a1a1a;margin-bottom:5px}
+
+@media(max-width:680px){
+  #hdr-inner{flex-wrap:wrap;height:auto;padding:8px 0;gap:6px}
+  #tabs{order:3;width:100%}
+  .tab{flex:1;height:38px;font-size:12px}
+  #main{padding:10px}
+  #grid{grid-template-columns:1fr}
+  #wl-panel{width:100%;right:-100%}
+}
+</style>
+</head>
+<body>
+
+<div id="hdr">
+  <div id="hdr-inner">
+    <div class="logo">Her<em>Deals</em></div>
+    <div id="tabs">
+      <button class="tab on" data-tab="fashion">👗 Fashion</button>
+      <button class="tab" data-tab="shoes">👟 Shoes &amp; Accessories</button>
+    </div>
+    <div id="hdr-right">
+      <button id="wl-btn">❤️ Saved <span class="wl-n" id="wl-n">0</span></button>
+    </div>
+  </div>
+</div>
+
+<div id="al-banner"></div>
+
+<div id="stats">
+  <div id="stats-inner">
+    <div class="stat">📦 <b id="s-total">0</b> Deals</div>
+    <div class="stat hot">🔥 <b id="s-hot">0</b> Hot (50%+)</div>
+    <div class="stat penny">💰 <b id="s-penny">0</b> Penny</div>
+    <div class="stat sz">💕 <b id="s-size">0</b> Your Size</div>
+  </div>
+</div>
+
+<div id="filters">
+  <div id="filters-inner">
+    <!-- FASHION FILTERS -->
+    <div id="ff">
+      <div class="frow">
+        <span class="flabel">Size</span>
+        <div class="chips" id="fsz-chips">
+          <button class="chip on" data-v="all">All</button>
+          <button class="chip" data-v="xs">XS</button>
+          <button class="chip" data-v="sm">S/M</button>
+          <button class="chip" data-v="ml">M/L</button>
+          <button class="chip" data-v="xl">XL</button>
+          <button class="chip" data-v="1x">1X</button>
+          <button class="chip" data-v="2x">2X</button>
+          <button class="chip" data-v="3x">3X</button>
+          <button class="chip" data-v="oversized">Oversized</button>
+        </div>
+      </div>
+      <div class="frow">
+        <span class="flabel">Category</span>
+        <select class="fsel" id="f-cat">
+          <option value="all">All Categories</option>
+          <option value="dresses">Dresses &amp; Skirts</option>
+          <option value="tops">Tops &amp; Blouses</option>
+          <option value="jeans">Jeans &amp; Pants</option>
+          <option value="leggings">Leggings</option>
+          <option value="activewear">Activewear</option>
+          <option value="outerwear">Outerwear</option>
+          <option value="plus">Plus Size</option>
+        </select>
+        <span class="flabel">Brand</span>
+        <select class="fsel" id="f-brand">
+          <option value="all">All Brands</option>
+          <option value="nike">Nike</option>
+          <option value="adidas">Adidas</option>
+          <option value="lane bryant">Lane Bryant</option>
+          <option value="torrid">Torrid</option>
+          <option value="asos">ASOS</option>
+          <option value="old navy">Old Navy</option>
+          <option value="target">Target</option>
+          <option value="h&m">H&amp;M</option>
+          <option value="shein">Shein</option>
+          <option value="levis">Levi's</option>
+          <option value="express">Express</option>
+          <option value="zara">Zara</option>
+          <option value="puma">Puma</option>
+        </select>
+        <span class="flabel">Type</span>
+        <div class="chips" id="ft-chips">
+          <button class="chip on" data-v="all">All</button>
+          <button class="chip" data-v="penny">💰 Penny</button>
+          <button class="chip" data-v="clearance">Clearance</button>
+          <button class="chip" data-v="coupon">Coupon Stack</button>
+          <button class="chip" data-v="flash">Flash Sale</button>
+        </div>
+        <div class="sort-wrap">
+          <label>Sort</label>
+          <select class="fsel" id="f-sort">
+            <option value="score">Best Match</option>
+            <option value="newest">Newest</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+            <option value="pct">% Off</option>
+            <option value="votes">Most Votes</option>
+          </select>
+        </div>
+        <button id="clr-fashion">✕ Clear</button>
+      </div>
+    </div>
+    <!-- SHOES FILTERS -->
+    <div id="sf" style="display:none">
+      <div class="frow">
+        <span class="flabel">Shoe Size</span>
+        <div class="chips" id="ssz-chips">
+          <button class="chip on" data-v="all">All</button>
+          <button class="chip" data-v="w7">W7</button>
+          <button class="chip" data-v="w8">W8</button>
+          <button class="chip" data-v="w85">W8.5</button>
+          <button class="chip" data-v="w9">W9</button>
+          <button class="chip" data-v="w10">W10</button>
+        </div>
+        <span class="flabel">Brand</span>
+        <select class="fsel" id="s-brand">
+          <option value="all">All Brands</option>
+          <option value="nike">Nike</option>
+          <option value="adidas">Adidas</option>
+          <option value="new balance">New Balance</option>
+          <option value="puma">Puma</option>
+          <option value="ugg">UGG</option>
+          <option value="asos">ASOS</option>
+          <option value="steve madden">Steve Madden</option>
+          <option value="vans">Vans</option>
+        </select>
+        <span class="flabel">Type</span>
+        <div class="chips" id="st-chips">
+          <button class="chip on" data-v="all">All</button>
+          <button class="chip" data-v="clearance">Clearance</button>
+          <button class="chip" data-v="flash">Flash Sale</button>
+          <button class="chip" data-v="coupon">Coupon</button>
+        </div>
+        <div class="sort-wrap">
+          <label>Sort</label>
+          <select class="fsel" id="s-sort">
+            <option value="score">Best Match</option>
+            <option value="newest">Newest</option>
+            <option value="price-asc">Price ↑</option>
+            <option value="price-desc">Price ↓</option>
+            <option value="pct">% Off</option>
+          </select>
+        </div>
+        <button id="clr-shoes">✕ Clear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="main"><div id="grid"></div></div>
+
+<div id="wl-overlay"></div>
+<div id="wl-panel">
+  <div id="wl-head"><h3>❤️ Saved Deals</h3><button id="wl-x">✕</button></div>
+  <div id="wl-body"></div>
+</div>
+
+<div id="al-modal">
+  <div id="al-overlay"></div>
+  <div id="al-box">
+    <h4>🔔 Set Price Alert</h4>
+    <div class="al-sub" id="al-title"></div>
+    <div class="al-hint">Alert me when price drops below:</div>
+    <input id="al-input" type="number" placeholder="0.00" step="0.01" min="0">
+    <div class="al-btns">
+      <button id="al-save">Set Alert</button>
+      <button id="al-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="toasts"></div>
+
+<script>
+var RSS2JSON_BASE = 'https://api.rss2json.com/v1/api.json?rss_url=';
+
+var HER_FEEDS = [
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=womens+fashion+sale&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=nike+adidas+womens+sale&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=lane+bryant+torrid+sale&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=womens+shoes+size+8+9&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=asos+shein+womens+deal&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=target+old+navy+womens+sale&rss=1',
+  'https://www.dealnews.com/c/Clothing/Women/deals-rss.html',
+  'https://www.woot.com/plus/clothing-and-accessories.rss'
+];
+
+// HER PROFILE
+var HER_SIZES = ['xs','s/m','m/l',' xl ','1x','2x','3x','plus size','extended size','curve'];
+var HER_SHOE_SIZES = ['women\'s 8','women\'s 9','w8','w9','8.5','size 8','size 9',' 8 ',' 9 '];
+var HER_OVERSIZED = ['oversized','relaxed fit','flowy','loose fit','boyfriend fit'];
+
+// MOCK DATA
+var MOCK_FASHION = [
+  {id:'hf1',title:"Lane Bryant Women's Plus Size Ponte Blazer 2X/3X — Sale",link:'https://www.amazon.com',store:'amazon',price:34.99,orig:69,pct:49,votes:22,date:Date.now()-10800000,thumb:'',type:'',coupon:null,cat:'outerwear',brand:'Lane Bryant',sizeMatch:true},
+  {id:'hf2',title:'Nike Dri-FIT Training Tank Top Women XL Pink',link:'https://www.amazon.com',store:'amazon',price:19.99,orig:35,pct:43,votes:31,date:Date.now()-21600000,thumb:'',type:'',coupon:null,cat:'activewear',brand:'Nike',sizeMatch:true},
+  {id:'hf3',title:"Levi's 721 High Rise Skinny Jeans Women 1X Indigo",link:'https://www.amazon.com',store:'amazon',price:24.99,orig:59.50,pct:58,votes:44,date:Date.now()-5400000,thumb:'',type:'clearance',coupon:null,cat:'jeans',brand:"Levi's",sizeMatch:true},
+  {id:'hf4',title:'Old Navy SuperCash Active Leggings Women S/M Black',link:'https://www.amazon.com',store:'amazon',price:14.99,orig:30,pct:50,votes:28,date:Date.now()-32400000,thumb:'',type:'',coupon:null,cat:'leggings',brand:'Old Navy',sizeMatch:true},
+  {id:'hf5',title:'Torrid Plus Size Maxi Dress Floral 2X Oversized Boho',link:'https://www.amazon.com',store:'amazon',price:29.99,orig:54.95,pct:45,votes:19,date:Date.now()-50400000,thumb:'',type:'',coupon:null,cat:'dresses',brand:'Torrid',sizeMatch:true},
+  {id:'hf6',title:'Adidas Essentials Hoodie Women Large Rose Gold',link:'https://www.amazon.com',store:'amazon',price:27.99,orig:50,pct:44,votes:35,date:Date.now()-7200000,thumb:'',type:'',coupon:null,cat:'outerwear',brand:'Adidas',sizeMatch:true}
+];
+var MOCK_SHOES = [
+  {id:'hs1',title:'Nike Revolution 6 Running Shoe Women Size 8 — Sale',link:'https://www.amazon.com',store:'amazon',price:44.99,orig:70,pct:36,votes:29,date:Date.now()-14400000,thumb:'',type:'',coupon:null,cat:'shoes',brand:'Nike',sizeMatch:true},
+  {id:'hs2',title:'Adidas Ultraboost 22 Women 8.5 Cloud White Pink',link:'https://www.amazon.com',store:'amazon',price:89.99,orig:180,pct:50,votes:41,date:Date.now()-28800000,thumb:'',type:'clearance',coupon:null,cat:'shoes',brand:'Adidas',sizeMatch:true},
+  {id:'hs3',title:'New Balance Fresh Foam Women Size 9 — $30 Off',link:'https://www.amazon.com',store:'amazon',price:69.99,orig:99.95,pct:30,votes:16,date:Date.now()-43200000,thumb:'',type:'',coupon:null,cat:'shoes',brand:'New Balance',sizeMatch:true}
+];
+
+// STATE
+var allDeals = [];
+var tab = 'fashion';
+var wl = JSON.parse(localStorage.getItem('her_wl') || '[]');
+var als = JSON.parse(localStorage.getItem('her_als') || '[]');
+var pendingAlert = null;
+var ff = {size:'all', cat:'all', brand:'all', type:'all', sort:'score'};
+var sf = {size:'all', brand:'all', type:'all', sort:'score'};
+
+// HELPERS
+function scoreOf(pct, votes, sizeMatch, type) {
+  if (type === 'penny') return 95;
+  return Math.min(100, Math.round((pct||0)*0.6 + Math.min(votes||0,50)*0.6 + (sizeMatch?10:0)));
+}
+function relTime(ms) {
+  var d = (Date.now() - ms) / 1000;
+  if (d < 3600) return Math.round(d/60)+'m ago';
+  if (d < 86400) return Math.round(d/3600)+'h ago';
+  return Math.round(d/86400)+'d ago';
+}
+function storeInfo(s) {
+  var m = {amazon:{n:'Amazon',cls:'d-amz',e:'📦'}, walmart:{n:'Walmart',cls:'d-wmt',e:'🔵'}};
+  return m[s] || {n:'Slickdeals',cls:'d-oth',e:'🏷️'};
+}
+function scClass(s) {
+  if (s >= 80) return 'sc-ht';
+  if (s >= 60) return 'sc-hi';
+  if (s >= 30) return 'sc-md';
+  return 'sc-lo';
+}
+function parsePrice(txt) {
+  var prices = [], re = /\$(\d{1,5}(?:\.\d{2})?)/g, m;
+  while ((m = re.exec(txt))) { var v=parseFloat(m[1]); if(v>0&&v<10000) prices.push(v); }
+  if (!prices.length) return {sale:null,orig:null,pct:null};
+  if (prices.length === 1) {
+    var pm = txt.match(/(\d+)%\s*off/i);
+    var p = pm ? parseInt(pm[1]) : null;
+    return {sale:prices[0], orig:p?Math.round(prices[0]/(1-p/100)*100)/100:null, pct:p};
+  }
+  var sale=Math.min.apply(null,prices), orig=Math.max.apply(null,prices);
+  return {sale:sale, orig:orig, pct:orig>sale?Math.round((orig-sale)/orig*100):null};
+}
+function detectStore(link) {
+  var u=link.toLowerCase();
+  if(u.includes('amazon')) return 'amazon';
+  if(u.includes('walmart')) return 'walmart';
+  if(u.includes('target')) return 'target';
+  return 'other';
+}
+function detectBrand(txt) {
+  var t=txt.toLowerCase();
+  var bs=['lane bryant','torrid','nike','adidas','old navy','asos','shein','target','h&m','h and m',"levi's",'levis','express','zara','new balance','puma','ugg','steve madden','vans','forever 21','gap','ann taylor'];
+  for(var i=0;i<bs.length;i++) if(t.includes(bs[i])) return bs[i].trim();
+  return null;
+}
+function detectCat(txt) {
+  var t=txt.toLowerCase();
+  if(/\b(shoes?|sneakers?|boots?|heels?|sandals?|flats?|pumps?|wedges?|loafers?|mules?)\b/.test(t)) return 'shoes';
+  if(/\b(bag|purse|handbag|tote|clutch|jewelry|necklace|earring|bracelet|scarf|sunglasses|hat|cap|wallet|accessory|accessories)\b/.test(t)) return 'accessories';
+  if(/\b(leggings?|yoga pants?|tights?|jeggings?)\b/.test(t)) return 'leggings';
+  if(/\b(sports? bra|workout|gym|athletic|yoga|running|training|activewear|dri.?fit)\b/.test(t)) return 'activewear';
+  if(/\b(dress|gown|maxi|midi|skirt|romper|jumpsuit)\b/.test(t)) return 'dresses';
+  if(/\b(jeans?|denim|pants?|trousers?|shorts?|joggers?|sweatpants?)\b/.test(t)) return 'jeans';
+  if(/\b(jacket|coat|hoodie|cardigan|blazer|vest|windbreaker|pullover|puffer)\b/.test(t)) return 'outerwear';
+  if(/\b(plus\s*size|1x|2x|3x|extended size|curve)\b/.test(t)) return 'plus';
+  if(/\b(top|blouse|tank|cami|tunic|sweater|tee|t-shirt|shirt|crop|bralette)\b/.test(t)) return 'tops';
+  return 'other';
+}
+function detectSizeMatch(txt) {
+  var t = txt.toLowerCase();
+  var fashionSizes = ['xs','x-small','s/m','m/l',' 1x ','1x,','(1x)','1x/',' 2x ','2x,','(2x)','2x/','2xl','xxl',' 3x ','3x,','(3x)','3x/','3xl','xxxl','plus size','extended size','curve','oversized','relaxed fit','flowy','boyfriend'];
+  var shoeSizes = ["women's 8","women's 9","womens 8","womens 9","w8","w 8","w8.5","w 8.5","w9","w 9","size 8","size 9","8.5"," us 8 "," us 9 "];
+  for(var i=0;i<fashionSizes.length;i++) if(t.includes(fashionSizes[i])) return true;
+  for(var j=0;j<shoeSizes.length;j++) if(t.includes(shoeSizes[j])) return true;
+  // Also match standalone XL if it's clothes context
+  if(/\bxl\b/.test(t) && !/\b[0-9]+xl\b/.test(t)) return true;
+  return false;
+}
+function detectShoeSizeMatch(txt, sizeKey) {
+  var t = txt.toLowerCase();
+  var maps = {
+    all: true,
+    w7: ["women's 7","womens 7","w7"," us 7 ","size 7"],
+    w8: ["women's 8","womens 8","w8"," us 8 ","size 8","w 8"],
+    w85: ["8.5","w8.5","8 1/2","8½","women's 8.5"],
+    w9: ["women's 9","womens 9","w9"," us 9 ","size 9","w 9"],
+    w10: ["women's 10","womens 10","w10"," us 10 ","size 10"]
+  };
+  if(sizeKey === 'all') return true;
+  var keys = maps[sizeKey] || [];
+  return keys.some(function(k){return t.includes(k);});
+}
+function detectFashionSizeMatch(txt, sizeKey) {
+  var t = txt.toLowerCase();
+  var maps = {
+    all: [],
+    xs: ['xs','x-small','extra small'],
+    sm: ['s/m','small/medium','s-m','small medium'],
+    ml: ['m/l','medium/large','m-l','medium large'],
+    xl: [' xl ','x-large','extra large','(xl)'],
+    '1x': [' 1x ','(1x)','1x/','1x,','1xl','plus 14'],
+    '2x': [' 2x ','(2x)','2x/','2x,','2xl','xxl'],
+    '3x': [' 3x ','(3x)','3x/','3x,','3xl','xxxl'],
+    oversized: ['oversized','relaxed fit','flowy','loose fit','boyfriend fit','boxy']
+  };
+  if(sizeKey === 'all') return true;
+  var keys = maps[sizeKey] || [];
+  return keys.some(function(k){return t.includes(k);});
+}
+function detectType(txt, price) {
+  var t=txt.toLowerCase();
+  if(price!==null && price<5 && /penny deal|free after rebate/.test(t)) return 'penny';
+  if(/flash sale|lightning deal|today only|ends tonight/.test(t)) return 'flash';
+  if(/clearance|closeout|final sale/.test(t)) return 'clearance';
+  if(/coupon|promo code|code:/.test(t) && /[A-Z0-9]{5,15}/.test(txt)) return 'coupon';
+  return '';
+}
+function extractCoupon(txt) {
+  var m=txt.match(/(?:code|coupon|promo)[:\s]+([A-Z0-9]{5,15})/i);
+  return m ? m[1].toUpperCase() : null;
+}
+
+// PARSE FEED ITEM
+function parseItem(item) {
+  var txt = (item.title||'') + ' ' + (item.description||'');
+  var pr = parsePrice(txt);
+  var store = detectStore((item.link||'') + ' ' + (item.title||''));
+  var type = detectType(txt, pr.sale);
+  var coupon = extractCoupon(item.description||'');
+  var sizeMatch = detectSizeMatch(txt);
+  var brand = detectBrand(txt);
+  var cat = detectCat(txt);
+  var votes = parseInt(((item.description||'').match(/(\d+)\s*votes?/i)||[])[1]||0);
+  var score = scoreOf(pr.pct, votes, sizeMatch, type);
+  return {
+    id: 'h'+Math.random().toString(36).slice(2),
+    title: item.title||'Deal',
+    link: item.link||'#',
+    thumb: item.thumbnail||'',
+    store: store, price: pr.sale, orig: pr.orig, pct: pr.pct,
+    votes: votes, date: new Date(item.pubDate).getTime()||Date.now(),
+    type: type, coupon: coupon, sizeMatch: sizeMatch, brand: brand, cat: cat,
+    score: score
+  };
+}
+
+// FETCH
+function fetchTimeout(url, ms) {
+  var ctrl = new AbortController();
+  var id = setTimeout(function(){ctrl.abort();}, ms);
+  return fetch(url, {signal:ctrl.signal}).then(function(r){clearTimeout(id);return r;}).catch(function(e){clearTimeout(id);throw e;});
+}
+function fetchFeed(url) {
+  var api = RSS2JSON_BASE + encodeURIComponent(url);
+  return fetchTimeout(api, 9000).then(function(r){return r.json();}).then(function(d){
+    if(!d.items) return [];
+    return d.items.map(function(i){return parseItem(i);});
+  }).catch(function(){return [];});
+}
+
+// RENDER
+function makeCard(d) {
+  var score = d.score || scoreOf(d.pct, d.votes, d.sizeMatch, d.type);
+  var si = storeInfo(d.store);
+  var inWL = wl.some(function(w){return w.id===d.id;});
+  var hasAl = als.some(function(a){return a.id===d.id;});
+
+  var priceH = d.price!=null
+    ? '<span class="sale">$'+d.price.toFixed(2)+'</span>'
+      +(d.orig?'<span class="orig">$'+d.orig.toFixed(2)+'</span>':'')
+      +(d.pct?'<span class="pct">-'+d.pct+'%</span>':'')
+    : '<span class="sale" style="font-size:13px;color:var(--muted)">See deal</span>';
+
+  var badgeH = ''
+    +(d.type==='penny'?'<span class="badge b-penny">💰 Penny Deal</span>':'')
+    +(d.type==='clearance'?'<span class="badge b-clear">Clearance</span>':'')
+    +(d.type==='flash'?'<span class="badge b-flash">⚡ Flash</span>':'')
+    +(d.type==='coupon'?'<span class="badge b-coup">🏷️ Coupon</span>':'')
+    +(d.sizeMatch?'<span class="badge b-size">💕 Your Size</span>':'')
+    +(d.brand?'<span class="badge b-brand">'+d.brand+'</span>':'');
+
+  var couponH = d.coupon
+    ? '<div class="coup-row"><span class="coup-code">'+d.coupon+'</span><button class="copy-btn" data-code="'+d.coupon+'">Copy</button></div>'
+    : '';
+
+  var thumbH = d.thumb
+    ? '<img class="thumb" src="'+d.thumb+'" alt="" onerror="this.style.display=\'none\'">'
+    : '<div class="no-thumb">'+si.e+'</div>';
+
+  var div = document.createElement('div');
+  div.className = 'card';
+  div.dataset.id = d.id;
+  div.innerHTML =
+    '<div class="card-top">'
+      +'<div class="store-tag"><span class="dot '+si.cls+'"></span>'+si.n+'</div>'
+      +'<div class="score '+scClass(score)+'">'+score+'</div>'
+    +'</div>'
+    +thumbH
+    +'<div class="card-body">'
+      +'<div class="ctitle">'+d.title+'</div>'
+      +'<div class="prices">'+priceH+'</div>'
+      +'<div class="badges">'+badgeH+'</div>'
+      +couponH
+      +'<div class="meta">'+relTime(d.date)+'</div>'
+    +'</div>'
+    +'<div class="card-foot">'
+      +'<a class="view-btn" href="'+d.link+'" target="_blank" rel="noopener">View Deal →</a>'
+      +'<button class="ico-btn btn-star'+(inWL?' on':'')+ '" data-id="'+d.id+'" title="Save">&#x2665;</button>'
+      +'<button class="ico-btn btn-bell'+(hasAl?' on':'')+ '" data-id="'+d.id+'" title="Set Alert">🔔</button>'
+    +'</div>';
+
+  var cp=div.querySelector('.copy-btn');
+  if(cp) cp.addEventListener('click', function(){
+    navigator.clipboard.writeText(this.dataset.code).then(function(){toast('Copied!');});
+  });
+  div.querySelector('.btn-star').addEventListener('click', function(){
+    var idx=wl.findIndex(function(w){return w.id===d.id;});
+    if(idx>-1){wl.splice(idx,1);this.innerHTML='&#x2665;';this.classList.remove('on');toast('Removed from saved');}
+    else{wl.push({id:d.id,title:d.title,link:d.link,store:d.store,price:d.price});this.innerHTML='&#x2665;';this.classList.add('on');toast('Saved ❤️');}
+    saveWL();
+  });
+  div.querySelector('.btn-bell').addEventListener('click', function(){openAlert(d);});
+  return div;
+}
+
+function getTabDeals() {
+  if(tab === 'shoes') {
+    return allDeals.filter(function(d){return d.cat==='shoes'||d.cat==='accessories';});
+  }
+  return allDeals.filter(function(d){return d.cat!=='shoes'&&d.cat!=='accessories';});
+}
+
+function render() {
+  var deals = getTabDeals();
+  var f = tab==='fashion' ? ff : sf;
+
+  if(tab === 'fashion') {
+    if(f.size!=='all') deals=deals.filter(function(d){return detectFashionSizeMatch(d.title+' '+d.title, f.size);});
+    if(f.cat!=='all') deals=deals.filter(function(d){return d.cat===f.cat;});
+    if(f.brand!=='all') deals=deals.filter(function(d){return (d.brand||'').toLowerCase().includes(f.brand);});
+    if(f.type!=='all') deals=deals.filter(function(d){return d.type===f.type;});
+  } else {
+    if(f.size!=='all') deals=deals.filter(function(d){return detectShoeSizeMatch(d.title+' '+d.title, f.size);});
+    if(f.brand!=='all') deals=deals.filter(function(d){return (d.brand||'').toLowerCase().includes(f.brand);});
+    if(f.type!=='all') deals=deals.filter(function(d){return d.type===f.type;});
+  }
+
+  var sorts={
+    score:function(a,b){return (b.score||0)-(a.score||0);},
+    newest:function(a,b){return b.date-a.date;},
+    'price-asc':function(a,b){return (a.price||9999)-(b.price||9999);},
+    'price-desc':function(a,b){return (b.price||0)-(a.price||0);},
+    pct:function(a,b){return (b.pct||0)-(a.pct||0);},
+    votes:function(a,b){return (b.votes||0)-(a.votes||0);}
+  };
+  deals.sort(sorts[f.sort]||sorts.score);
+
+  document.getElementById('s-total').textContent=deals.length;
+  document.getElementById('s-hot').textContent=deals.filter(function(d){return (d.pct||0)>=50;}).length;
+  document.getElementById('s-penny').textContent=deals.filter(function(d){return d.type==='penny';}).length;
+  document.getElementById('s-size').textContent=deals.filter(function(d){return d.sizeMatch;}).length;
+
+  var grid=document.getElementById('grid');
+  grid.innerHTML='';
+  if(!deals.length){
+    grid.innerHTML='<div class="empty"><div class="ei">👗</div><h3>No deals found</h3><p>Try adjusting your filters or check back soon</p></div>';
+    return;
+  }
+  deals.forEach(function(d){grid.appendChild(makeCard(d));});
+  updateClear();
+}
+
+function updateClear(){
+  var fashionDirty = ff.size!=='all'||ff.cat!=='all'||ff.brand!=='all'||ff.type!=='all';
+  var shoesDirty = sf.size!=='all'||sf.brand!=='all'||sf.type!=='all';
+  document.getElementById('clr-fashion').classList.toggle('show', fashionDirty);
+  document.getElementById('clr-shoes').classList.toggle('show', shoesDirty);
+}
+
+// CHIPS
+function initChips(id, key, obj){
+  document.getElementById(id).addEventListener('click',function(e){
+    var b=e.target.closest('.chip'); if(!b) return;
+    this.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+    b.classList.add('on');
+    obj[key]=b.dataset.v;
+    render();
+  });
+}
+
+// WATCHLIST
+function saveWL(){
+  localStorage.setItem('her_wl',JSON.stringify(wl));
+  document.getElementById('wl-n').textContent=wl.length;
+  renderWL();
+}
+function renderWL(){
+  var b=document.getElementById('wl-body');
+  if(!wl.length){b.innerHTML='<div class="wl-empty">❤️ No saved deals yet</div>';return;}
+  b.innerHTML=wl.map(function(d){
+    return '<div class="wli"><div class="wli-info">'
+      +'<div class="wli-title">'+d.title+'</div>'
+      +(d.price!=null?'<div class="wli-price">$'+d.price.toFixed(2)+'</div>':'')
+      +'<div class="wli-store">'+(storeInfo(d.store).n)+'</div>'
+      +'</div><button class="wli-rm" data-id="'+d.id+'">✕</button></div>';
+  }).join('');
+  b.querySelectorAll('.wli-rm').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      wl=wl.filter(function(w){return w.id!==btn.dataset.id;});
+      saveWL();
+      var s=document.querySelector('.btn-star[data-id="'+btn.dataset.id+'"]');
+      if(s){s.classList.remove('on');}
+    });
+  });
+}
+
+// ALERTS
+function openAlert(d){
+  pendingAlert=d;
+  document.getElementById('al-title').textContent=d.title.slice(0,60)+'...';
+  document.getElementById('al-input').value=d.price?(d.price*0.9).toFixed(2):'';
+  document.getElementById('al-modal').classList.add('open');
+}
+function saveAls(){localStorage.setItem('her_als',JSON.stringify(als));}
+function checkAlerts(){
+  var fired=als.filter(function(a){return a.curPrice&&a.targetPrice&&a.curPrice<=a.targetPrice;});
+  if(!fired.length) return;
+  var b=document.getElementById('al-banner');
+  b.innerHTML=fired.map(function(a){
+    return '🔔 <strong>'+a.title.slice(0,40)+'</strong> hit $'+a.curPrice+' (your target: $'+a.targetPrice+')';
+  }).join(' &nbsp;|&nbsp; ')+' <button onclick="document.getElementById(\'al-banner\').classList.remove(\'open\')" style="margin-left:10px;border:1px solid var(--rose);background:none;padding:2px 8px;cursor:pointer;border-radius:3px;font-size:11px;">Dismiss</button>';
+  b.classList.add('open');
+}
+
+// LOAD
+function loadDeals(){
+  // Show mock data immediately
+  var mockData = MOCK_FASHION.concat(MOCK_SHOES).map(function(d){
+    return Object.assign({},d,{score:scoreOf(d.pct,d.votes,d.sizeMatch,d.type)});
+  });
+  allDeals = mockData;
+  render();
+
+  // Fetch live data in background
+  var feedP = HER_FEEDS.map(function(u){return fetchFeed(u);});
+  Promise.all(feedP).then(function(results){
+    var items = [];
+    results.forEach(function(r){items=items.concat(r);});
+    // Dedup by title prefix
+    var seen={};
+    items=items.filter(function(d){
+      var k=d.title.slice(0,35).toLowerCase();
+      if(seen[k]) return false;
+      seen[k]=true;
+      return true;
+    });
+    if(items.length>0){
+      allDeals=items;
+      render();
+    }
+  }).catch(function(){});
+}
+
+// TOAST
+function toast(msg){
+  var el=document.createElement('div');
+  el.className='toast';el.textContent=msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(function(){el.remove();},2200);
+}
+
+// INIT
+document.addEventListener('DOMContentLoaded', function(){
+  // Tabs
+  document.querySelectorAll('.tab').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
+      btn.classList.add('on');
+      tab=btn.dataset.tab;
+      document.getElementById('ff').style.display=tab==='fashion'?'':'none';
+      document.getElementById('sf').style.display=tab==='shoes'?'':'none';
+      render();
+    });
+  });
+
+  // Fashion filter chips
+  initChips('fsz-chips','size',ff);
+  initChips('ft-chips','type',ff);
+  // Shoes filter chips
+  initChips('ssz-chips','size',sf);
+  initChips('st-chips','type',sf);
+
+  // Fashion selects
+  document.getElementById('f-cat').addEventListener('change',function(){ff.cat=this.value;render();});
+  document.getElementById('f-brand').addEventListener('change',function(){ff.brand=this.value;render();});
+  document.getElementById('f-sort').addEventListener('change',function(){ff.sort=this.value;render();});
+  // Shoes selects
+  document.getElementById('s-brand').addEventListener('change',function(){sf.brand=this.value;render();});
+  document.getElementById('s-sort').addEventListener('change',function(){sf.sort=this.value;render();});
+
+  // Clear filters
+  document.getElementById('clr-fashion').addEventListener('click',function(){
+    ff.size='all';ff.cat='all';ff.brand='all';ff.type='all';ff.sort='score';
+    document.querySelectorAll('#fsz-chips .chip,#ft-chips .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v==='all');});
+    document.getElementById('f-cat').value='all';
+    document.getElementById('f-brand').value='all';
+    document.getElementById('f-sort').value='score';
+    render();
+  });
+  document.getElementById('clr-shoes').addEventListener('click',function(){
+    sf.size='all';sf.brand='all';sf.type='all';sf.sort='score';
+    document.querySelectorAll('#ssz-chips .chip,#st-chips .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v==='all');});
+    document.getElementById('s-brand').value='all';
+    document.getElementById('s-sort').value='score';
+    render();
+  });
+
+  // Watchlist
+  document.getElementById('wl-btn').addEventListener('click',function(){
+    document.getElementById('wl-panel').classList.add('open');
+    document.getElementById('wl-overlay').classList.add('open');
+    renderWL();
+  });
+  function closeWL(){
+    document.getElementById('wl-panel').classList.remove('open');
+    document.getElementById('wl-overlay').classList.remove('open');
+  }
+  document.getElementById('wl-x').addEventListener('click',closeWL);
+  document.getElementById('wl-overlay').addEventListener('click',closeWL);
+
+  // Alert modal
+  document.getElementById('al-save').addEventListener('click',function(){
+    var price=parseFloat(document.getElementById('al-input').value);
+    if(!pendingAlert||isNaN(price)) return;
+    als=als.filter(function(a){return a.id!==pendingAlert.id;});
+    als.push({id:pendingAlert.id,title:pendingAlert.title,url:pendingAlert.link,targetPrice:price,curPrice:pendingAlert.price});
+    saveAls();
+    document.getElementById('al-modal').classList.remove('open');
+    toast('Alert set 🔔');
+    var bell=document.querySelector('.btn-bell[data-id="'+pendingAlert.id+'"]');
+    if(bell) bell.classList.add('on');
+    pendingAlert=null;
+  });
+  document.getElementById('al-cancel').addEventListener('click',function(){
+    document.getElementById('al-modal').classList.remove('open');pendingAlert=null;
+  });
+  document.getElementById('al-overlay').addEventListener('click',function(){
+    document.getElementById('al-modal').classList.remove('open');pendingAlert=null;
+  });
+
+  // Init
+  document.getElementById('wl-n').textContent=wl.length;
+  checkAlerts();
+  loadDeals();
+});
+</script>
+</body>
+</html>
