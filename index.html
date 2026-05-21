@@ -3,329 +3,451 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DealHunter</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>The Stocky Standard — Deals Built For How You're Built</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;border-radius:0!important}
 :root{
-  --bg:#F8F6F1;--card:#fff;--border:#E8E4DC;
-  --navy:#1B2A4A;--red:#C8102E;--green:#1a7a3c;
-  --muted:#666;--light:#f0ede6;--shadow:0 2px 8px rgba(0,0,0,.08);
+  /* Brand tokens */
+  --forest:#1F3A2E;--pine:#14241B;--moss:#2F5141;--sage:#4A6B5A;
+  --cream:#F1E8D3;--bone:#E8DEC5;--paper:#FBF6E9;--ink:#1A1612;--slate:#4A4238;
+  --gold-brand:#C8A04A;--brass:#9C7A2E;--tobacco:#6B4A2E;--oxblood:#7A2A20;
+  --display:'Instrument Serif','Times New Roman',serif;
+  --body:'Space Grotesk',system-ui,sans-serif;
+  --mono:'JetBrains Mono','Courier New',monospace;
+  /* Legacy aliases — maps existing code to new brand */
+  --bg:var(--cream);--card:var(--paper);--border:rgba(26,22,18,.14);
+  --navy:var(--forest);--accent:var(--forest);--accent2:var(--pine);
+  --gold:var(--gold-brand);--green:var(--forest);--red:var(--oxblood);
+  --muted:var(--slate);--light:var(--bone);--shadow:0 10px 30px -20px rgba(26,22,18,.18);
 }
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:#1a1a1a;min-height:100vh}
-button{font-family:'Outfit',sans-serif;cursor:pointer;border:none;background:none}
+/* circular exceptions */
+.dot,.score,#sub-fab{border-radius:50%!important}
+body{font-family:var(--body);background-color:var(--cream);background-image:radial-gradient(rgba(26,22,18,.065) 1.4px,transparent 1.4px);background-size:26px 26px;color:var(--ink);min-height:100vh}
+button{font-family:var(--body);cursor:pointer;border:none;background:none}
 a{text-decoration:none;color:inherit}
 
-/* HEADER */
-#hdr{background:var(--navy);color:#fff;padding:0 20px;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.2)}
-#hdr-inner{display:flex;align-items:center;gap:12px;height:54px}
-.logo{font-size:20px;font-weight:800;white-space:nowrap}.logo em{color:var(--red);font-style:normal}
-#tabs{display:flex;flex:1;justify-content:center}
-.tab{color:rgba(255,255,255,.6);font-size:13px;font-weight:700;padding:0 18px;height:54px;border-bottom:3px solid transparent;transition:.15s}
-.tab.on{color:#fff;border-bottom-color:var(--red)}
-.tab:hover{color:#fff}
-#hdr-right{display:flex;align-items:center;gap:8px;margin-left:auto}
-#loc{font-size:11px;color:rgba(255,255,255,.75);white-space:nowrap}
-#zip{width:68px;padding:3px 8px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;border-radius:4px;font:13px 'Outfit',sans-serif}
-#zip::placeholder{color:rgba(255,255,255,.4)}
-#wl-btn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:4px;padding:5px 12px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px}
-.wl-n{background:var(--red);border-radius:10px;padding:1px 6px;font-size:11px;font-weight:800}
+/* ── MASTHEAD ── */
+#hdr{background:var(--forest);color:var(--cream);position:sticky;top:0;z-index:100;border-bottom:2px solid var(--forest)}
+/* Utility bar */
+#util-bar{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;padding:0 20px;height:34px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(241,232,211,.12);color:rgba(241,232,211,.7)}
+#util-right{display:flex;align-items:center;gap:16px;color:rgba(241,232,211,.7)}
+#util-right .gold{color:var(--gold-brand);font-weight:700}
+/* Logo row */
+#hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px 10px}
+.wordmark{line-height:1}
+.wm-the{font-family:var(--display);font-style:italic;font-size:14px;color:rgba(241,232,211,.45);letter-spacing:.08em;line-height:1;margin-bottom:1px}
+.wm-main{font-family:var(--display);font-size:clamp(28px,4.5vw,48px);letter-spacing:-.02em;color:var(--cream);line-height:.95}
+.wm-main em{font-style:italic;color:var(--gold-brand)}
+/* 2px rule below logo row (done via border-bottom on stat bar) */
+#hdr-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+#wl-btn{background:rgba(241,232,211,.1);border:1px solid rgba(241,232,211,.2);color:var(--cream);padding:7px 14px;font-size:11px;font-weight:600;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;display:flex;align-items:center;gap:7px;white-space:nowrap;cursor:pointer}
+#wl-btn:hover{background:rgba(241,232,211,.18)}
+.wl-n{background:var(--gold-brand);color:var(--ink);padding:1px 7px;font-size:10px;font-weight:700;font-family:var(--mono)}
 
-/* STATS */
-#stats{background:var(--navy);color:#fff;padding:7px 20px;border-top:1px solid rgba(255,255,255,.1)}
-#stats-inner{max-width:1400px;margin:0 auto;display:flex;gap:20px;flex-wrap:wrap}
-.stat{font-size:12px;display:flex;align-items:center;gap:5px}
-.stat b{font-size:14px;font-weight:800}
-.stat.hot b{color:#ff7043}.stat.penny b{color:#69f0ae}.stat.sz b{color:#82b1ff}
+/* ── STATS BAR ── */
+#stats{background:var(--pine);border-top:1px solid rgba(241,232,211,.1);padding:8px 20px 10px;border-bottom:2px solid var(--forest)}
+#stats-inner{max-width:1400px;margin:0 auto;display:flex;gap:20px;flex-wrap:wrap;align-items:center}
+.stat{font-size:11px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:rgba(241,232,211,.55);display:flex;align-items:center;gap:5px}
+.stat b{font-size:13px;font-weight:700;color:var(--cream);font-family:var(--mono)}
+.stat.hot b{color:var(--gold-brand)}.stat.sz b{color:var(--gold-brand)}.stat.penny b{color:var(--gold-brand)}
+#last-upd{margin-left:auto;font-size:10px;font-family:var(--mono);letter-spacing:.1em;color:rgba(241,232,211,.35)}
 
-/* FILTERS */
-#filters{background:#fff;border-bottom:2px solid var(--border);padding:10px 20px}
+/* ── CATEGORY NAV ── */
+#cats{background:var(--cream);border-bottom:2px solid var(--forest);padding:0 20px;overflow-x:auto;white-space:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+#cats::-webkit-scrollbar{display:none}
+#cats-inner{max-width:1400px;margin:0 auto;display:flex;gap:0}
+.cat-pill{padding:12px 18px;font-size:11px;font-family:var(--mono);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--sage);border-bottom:2px solid transparent;transition:.12s;white-space:nowrap;flex-shrink:0}
+.cat-pill.on{color:var(--forest);border-bottom-color:var(--brass)}
+.cat-pill:hover{color:var(--forest)}
+
+/* ── FILTERS ── */
+#filters{background:var(--bone);border-bottom:1px solid rgba(26,22,18,.12);padding:10px 20px}
 #filters-inner{max-width:1400px;margin:0 auto}
 .frow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
 .frow:last-child{margin-bottom:0}
-.flabel{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.flabel{font-size:10px;font-family:var(--mono);font-weight:500;letter-spacing:.22em;color:var(--sage);text-transform:uppercase;white-space:nowrap}
 .chips{display:flex;gap:5px;flex-wrap:wrap}
-.chip{background:var(--light);border:1px solid var(--border);border-radius:4px;padding:4px 11px;font-size:11px;font-weight:700;cursor:pointer;transition:.12s;color:#1a1a1a}
-.chip:hover{border-color:var(--navy)}
-.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
-select.fsel{background:var(--light);border:1px solid var(--border);border-radius:4px;padding:4px 8px;font:11px 'Outfit',sans-serif;font-weight:700;cursor:pointer;color:#1a1a1a}
+.chip{background:var(--cream);border:1.5px solid rgba(26,22,18,.18);padding:4px 12px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:.12s;color:var(--slate)}
+.chip:hover{border-color:var(--forest);color:var(--forest)}
+.chip.on{background:var(--forest);border-color:var(--forest);color:var(--cream)}
+select.fsel{background:var(--cream);border:1.5px solid rgba(26,22,18,.18);padding:4px 8px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.08em;cursor:pointer;color:var(--ink)}
 .sort-wrap{margin-left:auto;display:flex;align-items:center;gap:6px}
-.sort-wrap label{font-size:11px;font-weight:700;color:var(--muted)}
-#clr-tech,#clr-cloth{display:none;border:1px solid var(--red);color:var(--red);border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700}
-#clr-tech.show,#clr-cloth.show{display:inline-flex}
-#clr-tech:hover,#clr-cloth:hover{background:var(--red);color:#fff}
+.sort-wrap label{font-size:10px;font-family:var(--mono);font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--sage)}
+#clr-f{display:none;border:1.5px solid var(--brass);color:var(--brass);padding:4px 10px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:500}
+#clr-f.show{display:inline-flex}
+#clr-f:hover{background:var(--brass);color:var(--cream)}
 
-/* MAIN */
-#main{max-width:1400px;margin:0 auto;padding:18px 20px}
-#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:14px}
-
-/* CARD */
-.card{background:var(--card);border:1px solid var(--border);border-radius:8px;display:flex;flex-direction:column;box-shadow:var(--shadow);transition:box-shadow .2s,transform .15s}
-.card:hover{box-shadow:0 4px 18px rgba(0,0,0,.11);transform:translateY(-1px)}
-.card.hot-deal{border-color:#f0ad00;box-shadow:0 2px 14px rgba(240,173,0,.22)}
-.card.hot-deal:hover{box-shadow:0 4px 22px rgba(240,173,0,.38);transform:translateY(-2px)}
-.card-img{position:relative}
-.hot-ribbon{position:absolute;top:8px;left:8px;background:#f0ad00;color:#7a5800;border-radius:3px;padding:2px 8px;font-size:10px;font-weight:800;letter-spacing:.3px;z-index:1;pointer-events:none}
-.card-top{display:flex;justify-content:space-between;align-items:center;padding:10px 12px 6px}
-.store-tag{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;color:var(--muted)}
-.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.d-amz{background:#ff9900}.d-bb{background:#0046be}.d-new{background:#e2611b}.d-wmt{background:#0071ce}.d-oth{background:#1a7a3c}
-.score{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:2.5px solid;flex-shrink:0}
-.sc-lo{color:#999;border-color:#ccc;background:#f5f5f5}
-.sc-md{color:#c17f00;border-color:#f0ad00;background:#fffbe6}
-.sc-hi{color:#1a7a3c;border-color:#5cb85c;background:#f0fff4}
-.sc-ht{color:#fff;border-color:var(--red);background:var(--red)}
-.thumb{width:100%;height:100px;object-fit:contain;background:#f9f9f9;padding:6px}
-.no-thumb{width:100%;height:100px;background:var(--light);display:flex;align-items:center;justify-content:center;font-size:32px}
-.card-body{padding:10px 12px;flex:1}
-.ctitle{font-size:13px;font-weight:600;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:7px}
-.prices{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:7px}
-.sale{font-size:20px;font-weight:800;color:var(--green)}
-.orig{font-size:12px;color:var(--muted);text-decoration:line-through}
-.pct{background:var(--red);color:#fff;border-radius:3px;padding:2px 5px;font-size:11px;font-weight:800}
-.badges{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
-.badge{border-radius:3px;padding:2px 6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.2px}
-.b-penny{background:var(--red);color:#fff}
-.b-clear{background:#7b2d8b;color:#fff}
-.b-flash{background:#e65100;color:#fff}
-.b-coup{background:#0f6e3a;color:#fff}
-.b-size{background:var(--navy);color:#fff}
-.b-brand{background:var(--light);color:var(--navy);border:1px solid var(--border)}
-.coup-row{display:flex;align-items:center;gap:6px;background:var(--light);border:1px dashed var(--border);border-radius:4px;padding:4px 8px;margin-bottom:5px}
-.coup-code{font-family:monospace;font-size:12px;font-weight:800;color:var(--navy);flex:1}
-.copy-btn{background:var(--navy);color:#fff;border-radius:3px;padding:2px 8px;font-size:10px;font-weight:700}
-.meta{font-size:11px;color:var(--muted);margin-bottom:5px}
-.avail-toggle{color:var(--muted);font-size:11px;font-weight:700;padding:3px 0;display:flex;align-items:center;gap:3px;width:100%}
-.avail-toggle:hover{color:var(--navy)}
-.avail-panel{display:none;background:var(--light);border-radius:4px;padding:7px 10px;margin-top:3px;font-size:11px}
-.avail-panel.open{display:block}
-.arow{display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid var(--border)}
-.arow:last-child{border:none}
-.albl{color:var(--muted);font-weight:700}
-.aval{font-weight:700}
-.card-foot{padding:8px 12px;border-top:1px solid var(--border);display:flex;align-items:center;gap:5px}
-.view-btn{flex:1;background:var(--navy);color:#fff;border-radius:4px;padding:7px 10px;font-size:12px;font-weight:800;text-align:center}
-.view-btn:hover{background:#263f6e}
-.ico-btn{background:var(--light);border:1px solid var(--border);border-radius:4px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:.12s}
-.ico-btn:hover{background:var(--border)}
-.ico-btn.on{background:#fff3cd;border-color:#f0ad00}
-
-/* WATCHLIST PANEL */
-#wl-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150}
-#wl-overlay.open{display:block}
-#wl-panel{position:fixed;top:0;right:-370px;width:340px;height:100vh;background:var(--card);box-shadow:-4px 0 20px rgba(0,0,0,.15);z-index:200;transition:right .3s;display:flex;flex-direction:column;overflow-y:auto}
-#wl-panel.open{right:0}
-#wl-head{background:var(--navy);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center}
-#wl-head h3{font-size:15px;font-weight:800}
-#wl-x{color:#fff;font-size:18px;line-height:1}
-#wl-body{padding:14px;flex:1}
-.wli{background:var(--light);border-radius:6px;padding:9px 11px;margin-bottom:9px;display:flex;gap:9px;align-items:flex-start}
-.wli-info{flex:1;min-width:0}
-.wli-title{font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
-.wli-price{font-size:14px;font-weight:800;color:var(--green)}
-.wli-store{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase}
-.wli-rm{color:var(--muted);font-size:15px;line-height:1;flex-shrink:0}
-.wli-rm:hover{color:var(--red)}
-.wl-empty{text-align:center;color:var(--muted);padding:36px 16px;font-size:13px}
-
-/* ALERT MODAL */
-#al-modal{display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center}
-#al-modal.open{display:flex}
-#al-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5)}
-#al-box{position:relative;background:#fff;border-radius:8px;padding:22px;width:320px;box-shadow:0 8px 40px rgba(0,0,0,.2)}
-#al-box h4{font-size:15px;font-weight:800;margin-bottom:5px}
-#al-box .al-sub{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:8px;line-height:1.3}
-#al-box .al-hint{font-size:11px;color:var(--muted);margin-bottom:12px}
-#al-input{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:4px;font:14px 'Outfit',sans-serif;font-weight:800;margin-bottom:10px}
-#al-input:focus{outline:none;border-color:var(--navy)}
-.al-btns{display:flex;gap:7px}
-.al-btns button{flex:1;padding:7px;border-radius:4px;font:13px 'Outfit',sans-serif;font-weight:700;cursor:pointer}
-#al-save{background:var(--navy);color:#fff;border:none}
-#al-cancel{background:var(--light);color:#1a1a1a;border:1px solid var(--border)}
-
-/* TOAST */
-#toasts{position:fixed;bottom:20px;right:20px;z-index:400;display:flex;flex-direction:column;gap:6px;pointer-events:none}
-.toast{background:var(--navy);color:#fff;border-radius:6px;padding:9px 14px;font-size:12px;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:tin .2s ease}
-@keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-
-/* ALERT BANNER */
-#al-banner{display:none;background:#fff3cd;border-bottom:2px solid #f0ad00;padding:8px 20px;font-size:12px;font-weight:600;color:#7a5800}
-#al-banner.open{display:block}
-
-/* EMPTY */
-.empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:var(--muted)}
-.empty .ei{font-size:44px;margin-bottom:10px}
-.empty h3{font-size:17px;font-weight:800;color:#1a1a1a;margin-bottom:5px}
-
-/* STORE QUICK LINKS */
-#store-links{display:none;background:#fff;border-bottom:1px solid var(--border);padding:8px 20px}
-#store-links.show{display:block}
+/* ── STORE QUICK LINKS ── */
+#store-links{background:#fff;border-bottom:1px solid var(--border);padding:8px 20px}
 #store-links-inner{max-width:1400px;margin:0 auto}
 .sl-toggle{font-size:12px;font-weight:700;color:var(--navy);background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;gap:5px;margin-bottom:6px}
 .sl-toggle:hover{opacity:.75}
 .sl-pills{display:flex;gap:8px;flex-wrap:wrap}
-.sl-pill{display:inline-flex;align-items:center;gap:5px;background:var(--light);border:1px solid var(--border);border-radius:20px;padding:5px 13px;font-size:12px;font-weight:700;color:var(--navy);text-decoration:none;transition:.12s}
+.sl-pill{display:inline-flex;align-items:center;gap:5px;background:var(--light);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--navy);text-decoration:none;transition:.12s}
 .sl-pill:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
-.sl-pill span{font-size:14px}
+
+/* ── MAIN ── */
+#main{max-width:1400px;margin:0 auto;padding:20px}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+
+/* ── CARDS ── */
+.card{background:var(--bone);border:1px solid rgba(26,22,18,.13);display:flex;flex-direction:column;box-shadow:var(--shadow);transition:box-shadow .2s,transform .15s;overflow:hidden}
+.card:hover{box-shadow:0 14px 36px -20px rgba(26,22,18,.3);transform:translateY(-1px)}
+.card.hot-deal{background:var(--forest);border:2px solid var(--gold-brand);box-shadow:6px 6px 0 var(--gold-brand),6px 6px 0 1px var(--ink);color:var(--cream)}
+.card.hot-deal:hover{box-shadow:8px 8px 0 var(--gold-brand),8px 8px 0 1px var(--ink)}
+.card.community-pick{border-color:var(--brass);box-shadow:4px 4px 0 var(--brass)}
+.card-img{position:relative}
+.hot-ribbon{position:absolute;top:0;left:0;right:0;background:var(--gold-brand);color:var(--ink);padding:4px 12px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;z-index:1;display:flex;justify-content:space-between;align-items:center}
+.cp-ribbon{position:absolute;top:0;right:0;background:var(--brass);color:var(--cream);padding:3px 10px;font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;z-index:1}
+.thumb{width:100%;height:120px;object-fit:contain;background:var(--moss);padding:12px;opacity:.85}
+.card.hot-deal .thumb{background:var(--pine)}
+.no-thumb{width:100%;height:120px;background:var(--moss);display:flex;align-items:center;justify-content:center;font-size:36px}
+.card.hot-deal .no-thumb{background:var(--pine)}
+.card-top{display:flex;justify-content:space-between;align-items:center;padding:10px 14px 6px}
+.store-tag{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--sage)}
+.card.hot-deal .store-tag{color:rgba(241,232,211,.55)}
+.dot{width:7px;height:7px;flex-shrink:0}
+.d-amz{background:#c8960a}.d-wmt{background:#2F5141}.d-oth{background:var(--brass)}
+.score{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;border:1.5px solid;flex-shrink:0}
+.sc-lo{color:var(--sage);border-color:var(--sage);background:transparent}
+.sc-md{color:var(--brass);border-color:var(--brass);background:transparent}
+.sc-hi{color:var(--forest);border-color:var(--forest);background:transparent}
+.sc-ht{color:var(--ink);border-color:var(--gold-brand);background:var(--gold-brand)}
+.card.hot-deal .sc-hi,.card.hot-deal .sc-ht{color:var(--gold-brand);border-color:var(--gold-brand);background:transparent}
+.card-body{padding:10px 14px;flex:1}
+.ctitle{font-family:var(--display);font-size:16px;font-weight:400;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:8px;letter-spacing:-.01em}
+.card.hot-deal .ctitle{color:var(--cream)}
+.prices{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.sale{font-family:var(--display);font-size:26px;font-weight:400;color:var(--forest);letter-spacing:-.02em}
+.card.hot-deal .sale{color:var(--gold-brand)}
+.orig{font-family:var(--mono);font-size:11px;color:var(--sage);text-decoration:line-through;letter-spacing:.04em}
+.card.hot-deal .orig{color:rgba(241,232,211,.45)}
+.pct{background:transparent;color:var(--brass);font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--brass);padding:2px 7px}
+.card.hot-deal .pct{color:var(--gold-brand);border-color:var(--gold-brand)}
+/* ── TIP ── */
+.tip-wrap{margin-bottom:8px}
+.tip-add-btn{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--sage);padding:0;background:none;border:none;cursor:pointer}
+.tip-add-btn:hover{color:var(--forest)}
+.tip-text{font-family:var(--body);font-style:italic;font-size:12px;color:var(--slate);background:rgba(26,22,18,.04);border-left:2px solid var(--brass);padding:4px 8px;line-height:1.5;display:flex;justify-content:space-between;align-items:flex-start;gap:6px}
+.card.hot-deal .tip-text{background:rgba(241,232,211,.08);border-left-color:var(--gold-brand);color:rgba(241,232,211,.7)}
+.tip-edit-btn{color:var(--sage);font-size:10px;flex-shrink:0;padding:0;cursor:pointer;background:none;border:none}
+.tip-input{width:100%;padding:6px 8px;border:1.5px solid var(--brass);font:12px var(--body);resize:none;margin-bottom:4px;display:block;background:var(--paper)}
+.tip-actions{display:flex;gap:5px}
+.tip-save-btn{background:var(--forest);color:var(--cream);padding:3px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;border:none;cursor:pointer}
+.tip-cancel-btn{background:transparent;color:var(--sage);padding:3px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;border:1px solid rgba(26,22,18,.18);cursor:pointer}
+/* ── VOTES ── */
+.vote-row{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+.vote-btn{background:transparent;border:1.5px solid rgba(26,22,18,.18);padding:3px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;gap:4px;font-weight:500;transition:.12s;color:var(--slate)}
+.vote-btn:hover{border-color:var(--forest);color:var(--forest)}
+.vote-btn.voted-up{background:rgba(31,58,46,.08);border-color:var(--forest);color:var(--forest)}
+.card.hot-deal .vote-btn{border-color:rgba(241,232,211,.25);color:rgba(241,232,211,.6)}
+.card.hot-deal .vote-btn.voted-up{background:rgba(200,160,74,.2);border-color:var(--gold-brand);color:var(--gold-brand)}
+/* ── BADGES ── */
+.badges{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.badge{padding:2px 7px;font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;border:1px solid}
+.b-penny{background:var(--gold-brand);color:var(--ink);border-color:var(--gold-brand)}
+.b-clear{background:transparent;color:var(--tobacco);border-color:var(--tobacco)}
+.b-flash{background:transparent;color:var(--brass);border-color:var(--brass)}
+.b-coup{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.b-size{background:transparent;color:var(--forest);border-color:var(--forest)}
+.b-brand{background:transparent;color:var(--slate);border-color:rgba(26,22,18,.2)}
+.b-cpick{background:var(--brass);color:var(--cream);border-color:var(--brass)}
+.b-pick{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+.card.hot-deal .badge{border-color:rgba(241,232,211,.3);color:rgba(241,232,211,.75)}
+.card.hot-deal .b-penny{background:var(--gold-brand);color:var(--ink);border-color:var(--gold-brand)}
+.coup-row{display:flex;align-items:center;gap:6px;background:rgba(26,22,18,.06);border:1px dotted rgba(26,22,18,.25);padding:5px 10px;margin-bottom:6px}
+.coup-code{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--forest);flex:1}
+.card.hot-deal .coup-code{color:var(--gold-brand)}
+.copy-btn{background:var(--forest);color:var(--cream);padding:2px 9px;font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.15em;text-transform:uppercase}
+.card.hot-deal .copy-btn{background:var(--gold-brand);color:var(--ink)}
+.meta{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--sage);text-transform:uppercase}
+.card.hot-deal .meta{color:rgba(241,232,211,.4)}
+.card-foot{padding:10px 14px;border-top:1px solid rgba(26,22,18,.1);display:flex;align-items:center;gap:6px}
+.card.hot-deal .card-foot{border-top-color:rgba(241,232,211,.15)}
+.view-btn{flex:1;background:var(--forest);color:var(--cream);padding:9px 10px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;text-align:center;transition:.12s}
+.view-btn:hover{background:var(--pine)}
+.card.hot-deal .view-btn{background:var(--gold-brand);color:var(--ink)}
+.card.hot-deal .view-btn:hover{background:var(--brass);color:var(--cream)}
+.ico-btn{background:transparent;border:1px solid rgba(26,22,18,.18);width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:13px;transition:.12s;flex-shrink:0}
+.ico-btn:hover{background:rgba(26,22,18,.07)}
+.ico-btn.on{background:rgba(31,58,46,.1);border-color:var(--forest)}
+.card.hot-deal .ico-btn{border-color:rgba(241,232,211,.2)}
+.card.hot-deal .ico-btn:hover{background:rgba(241,232,211,.1)}
+
+/* ── STORE QUICK LINKS ── */
+#store-links{background:var(--cream);border-bottom:1px dotted rgba(26,22,18,.2);padding:8px 20px}
+#store-links-inner{max-width:1400px;margin:0 auto}
+.sl-toggle{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--sage);background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.sl-toggle:hover{color:var(--forest)}
+.sl-pills{display:flex;gap:6px;flex-wrap:wrap}
+.sl-pill{display:inline-flex;align-items:center;gap:4px;background:transparent;border:1.5px solid rgba(26,22,18,.18);padding:4px 13px;font-family:var(--mono);font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--slate);text-decoration:none;transition:.12s}
+.sl-pill:hover{background:var(--forest);color:var(--cream);border-color:var(--forest)}
+
+/* ── WATCHLIST PANEL ── */
+#wl-overlay{display:none;position:fixed;inset:0;background:rgba(26,22,18,.5);z-index:150}
+#wl-overlay.open{display:block}
+#wl-panel{position:fixed;top:0;right:-380px;width:340px;height:100vh;background:var(--cream);border-left:2px solid var(--forest);box-shadow:-4px 0 24px rgba(26,22,18,.15);z-index:200;transition:right .3s;display:flex;flex-direction:column;overflow-y:auto}
+#wl-panel.open{right:0}
+#wl-head{background:var(--forest);color:var(--cream);padding:16px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--pine)}
+#wl-head h3{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.25em;text-transform:uppercase}
+#wl-x{color:var(--cream);font-size:18px;line-height:1;opacity:.7}
+#wl-body{padding:16px;flex:1}
+.wli{background:var(--bone);border:1px solid rgba(26,22,18,.12);padding:10px 12px;margin-bottom:8px;display:flex;gap:9px;align-items:flex-start}
+.wli-info{flex:1;min-width:0}
+.wli-title{font-family:var(--display);font-size:13px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.wli-price{font-family:var(--display);font-size:17px;font-weight:400;color:var(--forest);letter-spacing:-.01em}
+.wli-store{font-family:var(--mono);font-size:9px;color:var(--sage);letter-spacing:.2em;text-transform:uppercase;margin-top:2px}
+.wli-rm{color:var(--sage);font-size:15px;line-height:1;flex-shrink:0}
+.wli-rm:hover{color:var(--oxblood)}
+.wl-empty{text-align:center;color:var(--sage);padding:40px 16px;font-family:var(--display);font-style:italic;font-size:15px;line-height:1.5}
+
+/* ── ALERT MODAL ── */
+#al-modal{display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center}
+#al-modal.open{display:flex}
+#al-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+#al-box{position:relative;background:#fff;border-radius:10px;padding:24px;width:320px;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+#al-box h4{font-size:15px;font-weight:800;margin-bottom:5px}
+#al-box .al-sub{font-size:12px;font-weight:600;color:#1a1a1a;margin-bottom:8px;line-height:1.3}
+#al-box .al-hint{font-size:11px;color:var(--muted);margin-bottom:12px}
+#al-input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font:14px 'Outfit',sans-serif;font-weight:800;margin-bottom:10px}
+#al-input:focus{outline:none;border-color:var(--accent)}
+.al-btns{display:flex;gap:7px}
+.al-btns button{flex:1;padding:8px;border-radius:5px;font:13px 'Outfit',sans-serif;font-weight:700;cursor:pointer}
+#al-save{background:var(--accent);color:#fff;border:none}
+#al-cancel{background:var(--light);color:#1a1a1a;border:1px solid var(--border)}
+
+/* ── SUBMIT MODAL ── */
+#sub-fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 18px rgba(59,130,246,.45);z-index:50;cursor:pointer;border:none;transition:.15s;line-height:1}
+#sub-fab:hover{background:var(--accent2);transform:scale(1.07)}
+#sub-modal{display:none;position:fixed;inset:0;z-index:300;align-items:center;justify-content:center}
+#sub-modal.open{display:flex}
+#sub-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+#sub-box{position:relative;background:#fff;border-radius:10px;padding:24px;width:340px;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+#sub-box h4{font-size:16px;font-weight:800;margin-bottom:4px}
+#sub-box p{font-size:12px;color:var(--muted);margin-bottom:16px}
+.sub-label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;display:block}
+.sub-input{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:4px;font:13px 'Outfit',sans-serif;margin-bottom:12px}
+.sub-input:focus{outline:none;border-color:var(--accent)}
+.sub-btns{display:flex;gap:7px;margin-top:4px}
+.sub-btns button{flex:1;padding:9px;border-radius:5px;font:13px 'Outfit',sans-serif;font-weight:700;cursor:pointer}
+#sub-save{background:var(--accent);color:#fff;border:none}
+#sub-cancel{background:var(--light);color:#1a1a1a;border:1px solid var(--border)}
+
+/* ── TOAST ── */
+#toasts{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:400;display:flex;flex-direction:column;gap:6px;pointer-events:none;min-width:220px}
+.toast{background:var(--forest);color:var(--cream);border:1px solid var(--pine);padding:10px 18px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;box-shadow:4px 4px 0 var(--pine);animation:tin .2s ease;text-align:center}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+/* ── ALERT BANNER ── */
+#al-banner{display:none;background:rgba(200,160,74,.12);border-bottom:2px solid var(--gold-brand);padding:8px 20px;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--brass)}
+#al-banner.open{display:block}
+
+/* ── EMPTY ── */
+.empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--sage)}
+.empty .ei{font-size:40px;margin-bottom:12px}
+.empty h3{font-family:var(--display);font-style:italic;font-size:22px;font-weight:400;color:var(--ink);margin-bottom:8px}
+.empty p{font-family:var(--body);font-size:14px;color:var(--slate)}
+
+/* ── PROFILE BUTTON + NOTIF INDICATOR ── */
+#prof-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:6px;white-space:nowrap}
+#prof-btn:hover{background:rgba(255,255,255,.18)}
+#notif-btn{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.55);border-radius:6px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;transition:.12s}
+#notif-btn.on{color:#fff;background:rgba(59,130,246,.35);border-color:var(--accent)}
+
+/* ── NOTIFICATION BANNER ── */
+#notif-banner{display:none;background:#eff6ff;border-bottom:2px solid var(--accent);padding:10px 20px;font-size:13px;font-weight:600;color:var(--navy);align-items:center;gap:12px}
+#notif-banner.open{display:flex}
+#notif-enable-btn{background:var(--accent);color:#fff;border-radius:5px;padding:5px 14px;font-size:12px;font-weight:700;border:none;cursor:pointer;flex-shrink:0}
+#notif-dismiss{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;margin-left:auto;line-height:1}
+
+/* ── PROFILE MODAL ── */
+#prof-modal{display:none;position:fixed;inset:0;z-index:300;align-items:flex-start;justify-content:center;padding-top:36px;overflow-y:auto}
+#prof-modal.open{display:flex}
+#prof-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6)}
+#prof-box{position:relative;background:#fff;border-radius:14px;padding:28px;width:520px;max-width:94vw;box-shadow:0 8px 48px rgba(0,0,0,.25);margin-bottom:40px}
+#prof-box h3{font-size:20px;font-weight:900;margin-bottom:4px}
+#prof-box .prof-sub{font-size:13px;color:var(--muted);margin-bottom:22px;line-height:1.5}
+.prof-section{margin-bottom:20px}
+.prof-section h4{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:10px}
+.check-grid{display:flex;gap:7px;flex-wrap:wrap}
+.check-pill{display:flex;align-items:center;background:var(--light);border:2px solid var(--border);border-radius:6px;padding:6px 13px;font-size:13px;font-weight:700;cursor:pointer;transition:.12s;user-select:none}
+.check-pill:hover{border-color:var(--accent)}
+.check-pill.on{background:#eff6ff;border-color:var(--accent);color:var(--accent)}
+.prof-save{background:var(--navy);color:#fff;border-radius:7px;padding:13px;font-size:14px;font-weight:800;width:100%;margin-top:8px;border:none;cursor:pointer;transition:.12s}
+.prof-save:hover{background:var(--accent)}
+.prof-skip{background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;width:100%;margin-top:8px;cursor:pointer;padding:4px}
+.prof-skip:hover{color:var(--navy)}
+
+/* ── BRAND DIRECTORY ── */
+#brand-dir{display:none;max-width:1400px;margin:0 auto;padding:20px}
+#brand-dir.show{display:block}
+.brand-dir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.brand-card{background:#fff;border:1px solid var(--border);border-radius:10px;padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:8px}
+.brand-card-name{font-size:16px;font-weight:900;color:var(--navy)}
+.brand-overall{display:flex;align-items:center;gap:8px}
+.brand-stars-lg{font-size:17px;letter-spacing:1px}
+.brand-avg-num{font-size:14px;font-weight:800;color:var(--gold)}
+.brand-unrated{font-size:12px;color:var(--muted);font-style:italic}
+.brand-dims{display:flex;flex-direction:column;gap:3px}
+.brand-dim-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:2px 0;border-bottom:1px solid var(--border)}
+.brand-dim-row:last-child{border:none}
+.brand-dim-lbl{color:var(--muted);font-weight:600}
+.brand-dim-stars{font-size:11px;letter-spacing:.5px}
+.rate-it-btn{background:var(--accent);color:#fff;border-radius:5px;padding:8px;font-size:12px;font-weight:700;text-align:center;cursor:pointer;border:none;margin-top:4px;transition:.12s;width:100%}
+.rate-it-btn:hover{background:var(--accent2)}
+.rate-it-btn.rated{background:var(--light);color:var(--navy);border:1px solid var(--border)}
+.rate-it-btn.rated:hover{background:var(--border)}
+
+/* ── BRAND RATING MODAL ── */
+#rate-modal{display:none;position:fixed;inset:0;z-index:350;align-items:center;justify-content:center}
+#rate-modal.open{display:flex}
+#rate-overlay{position:absolute;inset:0;background:rgba(0,0,0,.55)}
+#rate-box{position:relative;background:#fff;border-radius:12px;padding:26px;width:380px;max-width:94vw;box-shadow:0 8px 48px rgba(0,0,0,.25)}
+#rate-box h4{font-size:18px;font-weight:900;margin-bottom:3px}
+.rate-brand-lbl{font-size:13px;color:var(--accent);font-weight:700;margin-bottom:20px}
+.rate-dim-row{margin-bottom:14px}
+.rate-dim-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
+.star-row{display:flex;gap:5px}
+.star-btn{font-size:26px;cursor:pointer;opacity:.25;transition:opacity .1s,transform .1s;line-height:1;background:none;border:none;padding:0}
+.star-btn.on{opacity:1}
+.star-btn:hover{opacity:.7;transform:scale(1.15)}
+#rate-save{background:var(--navy);color:#fff;border-radius:7px;padding:12px;font-size:14px;font-weight:800;width:100%;margin-top:8px;border:none;cursor:pointer;transition:.12s}
+#rate-save:hover{background:var(--accent)}
+#rate-cancel{background:none;border:none;color:var(--muted);font-size:12px;font-weight:600;width:100%;margin-top:6px;cursor:pointer;padding:4px}
+
+/* ── MINI BRAND STAR (in deal cards) ── */
+.mini-star{font-size:10px;color:var(--gold);font-weight:800;margin-left:3px;vertical-align:middle}
+
+/* ── YOUR PICK BADGE ── */
+.b-pick{background:#dcfce7;color:#14532d;border:1px solid #86efac}
+
+/* ── RESPONSIVE ── */
 @media(max-width:680px){
-  #hdr-inner{flex-wrap:wrap;height:auto;padding:8px 0;gap:6px}
-  #tabs{order:3;width:100%}
-  .tab{flex:1;height:38px;font-size:12px}
-  #main{padding:10px}
+  #hdr{padding:16px 16px 0}
+  .brand-name{font-size:28px}
+  #main{padding:12px}
   #grid{grid-template-columns:1fr}
   #wl-panel{width:100%;right:-100%}
+  #sub-fab{bottom:16px;right:16px}
 }
 </style>
 </head>
 <body>
 
 <div id="hdr">
+  <div id="util-bar">
+    <span>Free shipping at most partners over $75</span>
+    <div id="util-right">
+      <button id="notif-btn" title="Deal alerts">&#9679;</button>
+      <button id="prof-btn">My Profile</button>
+      <span>Saved <span class="gold" id="wl-n">0</span></span>
+    </div>
+  </div>
   <div id="hdr-inner">
-    <div class="logo">Deal<em>Hunter</em></div>
-    <div id="tabs">
-      <button class="tab on" data-tab="tech">💻 Tech Deals</button>
-      <button class="tab" data-tab="clothing">👕 Big &amp; Tall</button>
+    <div class="wordmark">
+      <div class="wm-the">The</div>
+      <div class="wm-main">Stocky <em>Standard</em></div>
     </div>
     <div id="hdr-right">
-      <div id="loc">📍 <span id="loc-txt">Detecting...</span></div>
-      <input id="zip" type="text" placeholder="ZIP" maxlength="5">
-      <button id="wl-btn">⭐ Watchlist <span class="wl-n" id="wl-n">0</span></button>
+      <button id="wl-btn">Saved Deals <span class="wl-n" id="wl-n-badge">0</span></button>
+    </div>
+  </div>
+  <div id="stats">
+    <div id="stats-inner">
+      <div class="stat"><b id="s-total">0</b> Deals</div>
+      <div class="stat hot"><b id="s-hot">0</b> Hot</div>
+      <div class="stat sz"><b id="s-size">0</b> Your Size</div>
+      <div class="stat penny"><b id="s-penny">0</b> Penny</div>
+      <div id="last-upd"><span id="last-updated">Just updated</span></div>
     </div>
   </div>
 </div>
 
 <div id="al-banner"></div>
 
-<div id="stats">
-  <div id="stats-inner">
-    <div class="stat">📦 <b id="s-total">0</b> Deals</div>
-    <div class="stat hot">🔥 <b id="s-hot">0</b> Hot (50%+)</div>
-    <div class="stat penny">💰 <b id="s-penny">0</b> Penny</div>
-    <div class="stat sz">🎯 <b id="s-size">0</b> Your Size</div>
-    <div class="stat" style="margin-left:auto;opacity:.75;font-size:11px">🔄 <span id="last-updated">Just updated</span></div>
+<div id="notif-banner">
+  <span>🔔 Get notified when deals match your profile</span>
+  <button id="notif-enable-btn">Enable Alerts</button>
+  <button id="notif-dismiss">✕</button>
+</div>
+
+<div id="cats">
+  <div id="cats-inner">
+    <button class="cat-pill on" data-cat="all">All Deals</button>
+    <button class="cat-pill" data-cat="tees">Tops &amp; Tees</button>
+    <button class="cat-pill" data-cat="jeans">Jeans &amp; Pants</button>
+    <button class="cat-pill" data-cat="shoes">Shoes &amp; Kicks</button>
+    <button class="cat-pill" data-cat="activewear">Activewear</button>
+    <button class="cat-pill" data-cat="outerwear">Outerwear</button>
+    <button class="cat-pill" data-cat="other">Workwear</button>
+    <button class="cat-pill" data-cat="brands">Brands We Trust</button>
   </div>
 </div>
 
 <div id="filters">
   <div id="filters-inner">
-    <!-- TECH -->
-    <div id="tf">
-      <div class="frow">
-        <span class="flabel">Type</span>
-        <div class="chips" id="tt-chips">
-          <button class="chip on" data-v="all">All</button>
-          <button class="chip" data-v="penny">💰 Penny</button>
-          <button class="chip" data-v="clearance">Clearance</button>
-          <button class="chip" data-v="coupon">Coupon Stack</button>
-          <button class="chip" data-v="flash">Flash Sale</button>
-        </div>
-        <span class="flabel" style="margin-left:10px">Store</span>
-        <div class="chips" id="ts-chips">
-          <button class="chip on" data-v="all">All</button>
-          <button class="chip" data-v="amazon">Amazon</button>
-          <button class="chip" data-v="bestbuy">Best Buy</button>
-          <button class="chip" data-v="newegg">Newegg</button>
-          <button class="chip" data-v="walmart">Walmart</button>
-        </div>
-        <div class="sort-wrap">
-          <label>Sort</label>
-          <select class="fsel" id="t-sort">
-            <option value="score">Best Match</option>
-            <option value="newest">Newest</option>
-            <option value="price-asc">Price ↑</option>
-            <option value="price-desc">Price ↓</option>
-            <option value="pct">% Off</option>
-            <option value="votes">Most Votes</option>
-          </select>
-        </div>
-        <button id="clr-tech">✕ Clear</button>
+    <div class="frow">
+      <span class="flabel">Size</span>
+      <div class="chips" id="sz-chips">
+        <button class="chip on" data-v="all">All</button>
+        <button class="chip" data-v="xl">XL</button>
+        <button class="chip" data-v="2x">2X</button>
+        <button class="chip" data-v="3x">3X</button>
+        <button class="chip" data-v="4x">4X</button>
+        <button class="chip" data-v="5x">5X</button>
+        <button class="chip" data-v="13plus">Size 13+</button>
       </div>
-      <div class="frow">
-        <span class="flabel">Price</span>
-        <div class="chips" id="tp-chips">
-          <button class="chip on" data-v="all">All</button>
-          <button class="chip" data-v="0-25">Under $25</button>
-          <button class="chip" data-v="25-50">$25–$50</button>
-          <button class="chip" data-v="50-100">$50–$100</button>
-          <button class="chip" data-v="100-200">$100–$200</button>
-          <button class="chip" data-v="200+">$200+</button>
-        </div>
+      <span class="flabel" style="margin-left:8px">Brand</span>
+      <select class="fsel" id="f-brand">
+        <option value="all">All Brands</option>
+        <option value="pro club">Pro Club</option>
+        <option value="nike">Nike</option>
+        <option value="adidas">Adidas</option>
+        <option value="carhartt">Carhartt</option>
+        <option value="levis">Levi's</option>
+        <option value="lee">Lee</option>
+        <option value="dickies">Dickies</option>
+        <option value="champion">Champion</option>
+        <option value="new balance">New Balance</option>
+        <option value="ralph lauren">Ralph Lauren</option>
+        <option value="true classic">True Classic</option>
+        <option value="kingsize">KingSize</option>
+        <option value="duluth">Duluth Trading</option>
+        <option value="wrangler">Wrangler</option>
+        <option value="hanes">Hanes</option>
+        <option value="dxl">DXL</option>
+      </select>
+      <span class="flabel">Type</span>
+      <div class="chips" id="tp-chips">
+        <button class="chip on" data-v="all">All</button>
+        <button class="chip" data-v="clearance">Clearance</button>
+        <button class="chip" data-v="coupon">Coupon</button>
+        <button class="chip" data-v="flash">⚡ Flash</button>
+        <button class="chip" data-v="community">🏆 Community Picks</button>
       </div>
+      <div class="sort-wrap">
+        <label>Sort</label>
+        <select class="fsel" id="f-sort">
+          <option value="score">Best Match</option>
+          <option value="newest">Newest</option>
+          <option value="price-asc">Price ↑</option>
+          <option value="price-desc">Price ↓</option>
+          <option value="pct">% Off</option>
+          <option value="upvotes">Most Upvoted</option>
+        </select>
+      </div>
+      <button id="clr-f">✕ Clear</button>
     </div>
-    <!-- CLOTHING -->
-    <div id="cf" style="display:none">
-      <div class="frow">
-        <span class="flabel">Size</span>
-        <div class="chips" id="cs-chips">
-          <button class="chip on" data-v="all">All</button>
-          <button class="chip" data-v="xl">XL</button>
-          <button class="chip" data-v="2x">2X</button>
-          <button class="chip" data-v="3x">3X</button>
-          <button class="chip" data-v="13">Size 13</button>
-        </div>
-      </div>
-      <div class="frow">
-        <span class="flabel">Category</span>
-        <select class="fsel" id="c-cat">
-          <option value="all">All Categories</option>
-          <option value="tees">Tees</option>
-          <option value="button-ups">Button-Ups</option>
-          <option value="jeans">Jeans</option>
-          <option value="athletic">Athletic</option>
-          <option value="shorts">Shorts</option>
-          <option value="outerwear">Outerwear</option>
-          <option value="shoes">Shoes</option>
-          <option value="streetwear">Streetwear</option>
-        </select>
-        <span class="flabel">Brand</span>
-        <select class="fsel" id="c-brand">
-          <option value="all">All Brands</option>
-          <option value="pro club">Pro Club</option>
-          <option value="nike">Nike</option>
-          <option value="adidas">Adidas</option>
-          <option value="levis">Levi's</option>
-          <option value="lee">Lee</option>
-          <option value="wrangler">Wrangler</option>
-          <option value="dickies">Dickies</option>
-          <option value="ben davis">Ben Davis</option>
-          <option value="carhartt">Carhartt</option>
-          <option value="champion">Champion</option>
-          <option value="dxl">DXL</option>
-          <option value="true religion">True Religion</option>
-          <option value="hanes">Hanes</option>
-          <option value="new balance">New Balance</option>
-        </select>
-        <span class="flabel">Type</span>
-        <div class="chips" id="ct-chips">
-          <button class="chip on" data-v="all">All</button>
-          <button class="chip" data-v="penny">💰 Penny</button>
-          <button class="chip" data-v="clearance">Clearance</button>
-          <button class="chip" data-v="coupon">Coupon Stack</button>
-          <button class="chip" data-v="flash">Flash Sale</button>
-        </div>
-        <div class="sort-wrap">
-          <label>Sort</label>
-          <select class="fsel" id="c-sort">
-            <option value="score">Best Match</option>
-            <option value="newest">Newest</option>
-            <option value="price-asc">Price ↑</option>
-            <option value="price-desc">Price ↓</option>
-            <option value="pct">% Off</option>
-            <option value="votes">Most Votes</option>
-          </select>
-        </div>
-        <button id="clr-cloth">✕ Clear</button>
-      </div>
-      <div class="frow">
-        <span class="flabel">Price</span>
-        <div class="chips" id="cp-chips">
-          <button class="chip on" data-v="all">All</button>
-          <button class="chip" data-v="0-25">Under $25</button>
-          <button class="chip" data-v="25-50">$25–$50</button>
-          <button class="chip" data-v="50-100">$50–$100</button>
-          <button class="chip" data-v="100-200">$100–$200</button>
-          <button class="chip" data-v="200+">$200+</button>
-        </div>
+    <div class="frow">
+      <span class="flabel">Price</span>
+      <div class="chips" id="pr-chips">
+        <button class="chip on" data-v="all">All</button>
+        <button class="chip" data-v="0-25">Under $25</button>
+        <button class="chip" data-v="25-50">$25–$50</button>
+        <button class="chip" data-v="50-100">$50–$100</button>
+        <button class="chip" data-v="100-200">$100–$200</button>
+        <button class="chip" data-v="200+">$200+</button>
       </div>
     </div>
   </div>
@@ -333,28 +455,115 @@ select.fsel{background:var(--light);border:1px solid var(--border);border-radius
 
 <div id="store-links">
   <div id="store-links-inner">
-    <button class="sl-toggle" id="sl-toggle">🏪 Shop Direct Sales &amp; Clearance ▼</button>
+    <button class="sl-toggle" id="sl-toggle">🏪 Shop The Standard Brands ▼</button>
     <div class="sl-pills" id="sl-pills" style="display:none">
-      <a class="sl-pill" href="https://www.dxl.com/c/sale" target="_blank" rel="noopener"><span>🏬</span> DXL Sale</a>
-      <a class="sl-pill" href="https://www.dxl.com/c/clearance" target="_blank" rel="noopener"><span>🔥</span> DXL Clearance</a>
-      <a class="sl-pill" href="https://www.lee.com/sale" target="_blank" rel="noopener"><span>👖</span> Lee Sale</a>
-      <a class="sl-pill" href="https://www.carhartt.com/category/sale" target="_blank" rel="noopener"><span>🧥</span> Carhartt Sale</a>
-      <a class="sl-pill" href="https://www.proclubstore.com" target="_blank" rel="noopener"><span>👕</span> Pro Club</a>
-      <a class="sl-pill" href="https://www.nike.com/w/sale-3yaep" target="_blank" rel="noopener"><span>✔</span> Nike Sale</a>
-      <a class="sl-pill" href="https://www.adidas.com/us/sale" target="_blank" rel="noopener"><span>🟢</span> Adidas Sale</a>
-      <a class="sl-pill" href="https://www.dickies.com/sale" target="_blank" rel="noopener"><span>🔧</span> Dickies Sale</a>
+      <a class="sl-pill" href="https://www.dxl.com/c/sale" target="_blank" rel="noopener">🏬 DXL Sale</a>
+      <a class="sl-pill" href="https://www.kingsizedirect.com/sale" target="_blank" rel="noopener">👑 KingSize</a>
+      <a class="sl-pill" href="https://bigboyseason365.com" target="_blank" rel="noopener">🔥 Big Boy Season</a>
+      <a class="sl-pill" href="https://mvpcollections.com" target="_blank" rel="noopener">🏆 MVP Collections</a>
+      <a class="sl-pill" href="https://thewinstonbox.com" target="_blank" rel="noopener">📦 The Winston Box</a>
+      <a class="sl-pill" href="https://oneboneclothing.com" target="_blank" rel="noopener">🦴 ONE BONE</a>
+      <a class="sl-pill" href="https://jordancraig.com/collections/sale" target="_blank" rel="noopener">👔 Jordan Craig</a>
+      <a class="sl-pill" href="https://www.duluthtrading.com/big-tall" target="_blank" rel="noopener">🔧 Duluth B&T</a>
+      <a class="sl-pill" href="https://www.proclubstore.com" target="_blank" rel="noopener">👕 Pro Club</a>
+      <a class="sl-pill" href="https://trueclassic.com/collections/sale" target="_blank" rel="noopener">✅ True Classic</a>
     </div>
   </div>
 </div>
 
 <div id="main"><div id="grid"></div></div>
 
+<!-- BRAND DIRECTORY (shown when Brands pill active) -->
+<div id="brand-dir">
+  <div class="brand-dir-grid" id="brand-dir-grid"></div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="prof-modal">
+  <div id="prof-overlay"></div>
+  <div id="prof-box">
+    <h3>👤 Set Your Profile</h3>
+    <p class="prof-sub">Tell us your sizes and favorite brands. We'll personalize your feed and alert you when deals match.</p>
+    <div class="prof-section">
+      <h4>Clothing Sizes</h4>
+      <div class="check-grid">
+        <div class="check-pill" data-group="sizes" data-val="xl">XL</div>
+        <div class="check-pill" data-group="sizes" data-val="2x">2X</div>
+        <div class="check-pill" data-group="sizes" data-val="3x">3X</div>
+        <div class="check-pill" data-group="sizes" data-val="4x">4X</div>
+        <div class="check-pill" data-group="sizes" data-val="5x">5X</div>
+      </div>
+    </div>
+    <div class="prof-section">
+      <h4>Shoe Sizes</h4>
+      <div class="check-grid">
+        <div class="check-pill" data-group="shoes" data-val="11">11</div>
+        <div class="check-pill" data-group="shoes" data-val="12">12</div>
+        <div class="check-pill" data-group="shoes" data-val="13">13</div>
+        <div class="check-pill" data-group="shoes" data-val="14">14</div>
+        <div class="check-pill" data-group="shoes" data-val="15">15</div>
+      </div>
+    </div>
+    <div class="prof-section">
+      <h4>Favorite Brands</h4>
+      <div class="check-grid">
+        <div class="check-pill" data-group="brands" data-val="pro club">Pro Club</div>
+        <div class="check-pill" data-group="brands" data-val="nike">Nike</div>
+        <div class="check-pill" data-group="brands" data-val="adidas">Adidas</div>
+        <div class="check-pill" data-group="brands" data-val="carhartt">Carhartt</div>
+        <div class="check-pill" data-group="brands" data-val="levis">Levi's</div>
+        <div class="check-pill" data-group="brands" data-val="lee">Lee</div>
+        <div class="check-pill" data-group="brands" data-val="dxl">DXL</div>
+        <div class="check-pill" data-group="brands" data-val="kingsize">KingSize</div>
+        <div class="check-pill" data-group="brands" data-val="champion">Champion</div>
+        <div class="check-pill" data-group="brands" data-val="new balance">New Balance</div>
+        <div class="check-pill" data-group="brands" data-val="duluth trading">Duluth Trading</div>
+        <div class="check-pill" data-group="brands" data-val="true classic">True Classic</div>
+      </div>
+    </div>
+    <button class="prof-save" id="prof-save">Save My Profile →</button>
+    <button class="prof-skip" id="prof-skip">Skip for now</button>
+  </div>
+</div>
+
+<!-- BRAND RATING MODAL -->
+<div id="rate-modal">
+  <div id="rate-overlay"></div>
+  <div id="rate-box">
+    <h4>Rate This Brand</h4>
+    <div class="rate-brand-lbl" id="rate-brand-lbl">Pro Club</div>
+    <div class="rate-dim-row">
+      <div class="rate-dim-title">Fit Accuracy — Does 3X fit like a 3X?</div>
+      <div class="star-row" id="stars-fit"></div>
+    </div>
+    <div class="rate-dim-row">
+      <div class="rate-dim-title">Size Range — How far up do they go?</div>
+      <div class="star-row" id="stars-range"></div>
+    </div>
+    <div class="rate-dim-row">
+      <div class="rate-dim-title">Quality / Price — Worth what they charge?</div>
+      <div class="star-row" id="stars-quality"></div>
+    </div>
+    <div class="rate-dim-row">
+      <div class="rate-dim-title">Style — Does it look good on a big frame?</div>
+      <div class="star-row" id="stars-style"></div>
+    </div>
+    <button id="rate-save">Save Rating ⭐</button>
+    <button id="rate-cancel">Cancel</button>
+  </div>
+</div>
+
+<!-- FLOATING SUBMIT BUTTON -->
+<button id="sub-fab" title="Submit a find">+</button>
+
+<!-- WATCHLIST PANEL -->
 <div id="wl-overlay"></div>
 <div id="wl-panel">
-  <div id="wl-head"><h3>⭐ Watchlist</h3><button id="wl-x">✕</button></div>
+  <div id="wl-head"><h3>💾 Saved Deals</h3><button id="wl-x">✕</button></div>
   <div id="wl-body"></div>
 </div>
 
+<!-- PRICE ALERT MODAL -->
 <div id="al-modal">
   <div id="al-overlay"></div>
   <div id="al-box">
@@ -369,23 +578,32 @@ select.fsel{background:var(--light);border:1px solid var(--border);border-radius
   </div>
 </div>
 
+<!-- SUBMIT A FIND MODAL -->
+<div id="sub-modal">
+  <div id="sub-overlay"></div>
+  <div id="sub-box">
+    <h4>+ Submit a Find</h4>
+    <p>Found a deal the community needs? Put it on the Standard.</p>
+    <label class="sub-label">Brand Name</label>
+    <input class="sub-input" id="sub-brand" type="text" placeholder="e.g. Jordan Craig">
+    <label class="sub-label">Deal URL</label>
+    <input class="sub-input" id="sub-url" type="url" placeholder="https://...">
+    <label class="sub-label">Quick note (optional)</label>
+    <input class="sub-input" id="sub-note" type="text" placeholder='e.g. "Use code SAVE20 — 3X in stock"'>
+    <div class="sub-btns">
+      <button id="sub-save">Submit Find 🙌</button>
+      <button id="sub-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div id="toasts"></div>
 
 <script>
-var BESTBUY_API_KEY = 'IlihGhem6mbTPLvEw0TUdwjA';
 var RSS2JSON_BASE = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
-var TECH_FEEDS = [
-  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=laptop+deal&rss=1',
-  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=monitor+deal&rss=1',
-  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=gaming+laptop&rss=1',
-  'https://www.dealnews.com/c/Electronics/deals-rss.html',
-  'https://www.woot.com/plus/computers-and-laptops.rss',
-  'https://bensbargains.com/category/electronics/feed/',
-  'https://www.reddit.com/r/buildapcsales/.rss',
-  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=tech+coupon+code+promo&rss=1'
-];
-var CLOTH_FEEDS = [
+var TSS_FEEDS = [
+  // Core B&T searches (proven)
   'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=pro+club+big+tall&rss=1',
   'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=nike+adidas+mens+2x+3x&rss=1',
   'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=levis+lee+wrangler+jeans+big+tall&rss=1',
@@ -401,37 +619,66 @@ var CLOTH_FEEDS = [
   'https://bensbargains.com/category/clothing/feed/',
   'https://www.reddit.com/r/frugalmalefashion/.rss',
   'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=mens+clothing+clearance+sale&rss=1',
-  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=coupon+code+mens+clothing&rss=1'
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=coupon+code+mens+clothing&rss=1',
+  // Brand-targeted additions
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=kingsize+big+tall&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=jordan+craig+mens+sale&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=polo+ralph+lauren+big+tall+sale&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=old+navy+big+tall+extended+sizes&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=duluth+trading+big+tall&rss=1',
+  'https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&q=true+classic+tees+sale&rss=1'
 ];
 
-var MOCK_TECH = [
-  {id:'mt1',title:'Dell 15.6" Laptop i5 16GB 512GB SSD — Refurb',link:'https://www.amazon.com',store:'amazon',price:449,orig:699,pct:36,votes:47,date:Date.now()-7200000,thumb:'',type:'',coupon:null,tab:'tech'},
-  {id:'mt2',title:'LG 27" 4K IPS Monitor HDR400 — Best Buy Deal',link:'https://www.bestbuy.com',store:'bestbuy',price:249,orig:399,pct:38,votes:31,date:Date.now()-18000000,thumb:'',type:'clearance',coupon:null,tab:'tech'},
-  {id:'mt3',title:'Lenovo ThinkPad 14" FHD i5 8GB 256GB SSD',link:'https://www.newegg.com',store:'newegg',price:389,orig:549,pct:29,votes:22,date:Date.now()-28800000,thumb:'',type:'coupon',coupon:'THINK20',tab:'tech'},
-  {id:'mt4',title:'Samsung 32" Curved VA Monitor 75Hz 1080p',link:'https://www.walmart.com',store:'walmart',price:199,orig:279,pct:29,votes:18,date:Date.now()-43200000,thumb:'',type:'',coupon:null,tab:'tech'},
-  {id:'mt5',title:'Apple MacBook Air M2 13" 8GB 256GB — Open Box',link:'https://www.bestbuy.com',store:'bestbuy',price:849,orig:1099,pct:23,votes:55,date:Date.now()-3600000,thumb:'',type:'',coupon:null,tab:'tech'}
-];
-var MOCK_CLOTH = [
-  {id:'mc1',title:'Pro Club Heavyweight T-Shirt 3-Pack (3X) Black/White/Gray',link:'https://www.amazon.com',store:'amazon',price:32,orig:45,pct:29,votes:15,date:Date.now()-10800000,thumb:'',type:'',coupon:null,tab:'clothing',brand:'Pro Club',cat:'tees',sizeMatch:true},
-  {id:'mc2',title:"Levi's 550 Relaxed Fit Jeans 42x30 Dark Stonewash",link:'https://www.amazon.com',store:'amazon',price:29.99,orig:59.50,pct:50,votes:28,date:Date.now()-21600000,thumb:'',type:'',coupon:null,tab:'clothing',brand:"Levi's",cat:'jeans',sizeMatch:false},
-  {id:'mc3',title:'Nike Dri-FIT Training Shirt Short Sleeve Men 3X',link:'https://www.amazon.com',store:'amazon',price:24.99,orig:40,pct:37,votes:19,date:Date.now()-32400000,thumb:'',type:'',coupon:null,tab:'clothing',brand:'Nike',cat:'athletic',sizeMatch:true},
-  {id:'mc4',title:'Carhartt Force Long Sleeve T-Shirt Men 2X Relaxed Fit',link:'https://www.amazon.com',store:'amazon',price:27.99,orig:44.99,pct:38,votes:33,date:Date.now()-50400000,thumb:'',type:'',coupon:null,tab:'clothing',brand:'Carhartt',cat:'tees',sizeMatch:true},
-  {id:'mc5',title:'Champion Powerblend Hoodie Big & Tall 2X-3X Graphite',link:'https://www.amazon.com',store:'amazon',price:34.99,orig:55,pct:36,votes:24,date:Date.now()-14400000,thumb:'',type:'',coupon:null,tab:'clothing',brand:'Champion',cat:'outerwear',sizeMatch:true},
-  {id:'mc6',title:'New Balance 990v5 Running Shoe Men Size 13 — Sale',link:'https://www.amazon.com',store:'amazon',price:119.99,orig:185,pct:35,votes:41,date:Date.now()-7200000,thumb:'',type:'',coupon:null,tab:'clothing',brand:'New Balance',cat:'shoes',sizeMatch:true}
+// MOCK DATA — shows instantly on load
+var MOCK_DEALS = [
+  {id:'ts1',title:'True Classic Crew Tee 3-Pack Big+Tall 3X — Clearance',link:'https://www.amazon.com/dp/B09NQD3MKV',store:'amazon',price:34.99,orig:59.99,pct:42,votes:18,date:Date.now()-3600000,thumb:'',type:'clearance',coupon:null,brand:'True Classic',cat:'tees',sizeMatch:true},
+  {id:'ts2',title:"Levi's 550 Relaxed Fit Jeans Big+Tall 46x30 Dark Stonewash — 43% Off",link:'https://www.amazon.com/dp/B001GXREQO',store:'amazon',price:39.99,orig:69.50,pct:43,votes:31,date:Date.now()-7200000,thumb:'',type:'',coupon:null,brand:"Levi's",cat:'jeans',sizeMatch:true},
+  {id:'ts3',title:'Carhartt Force Big+Tall Short-Sleeve Henley Men 3X — 38% Off',link:'https://www.amazon.com/dp/B07BBZQ8Q1',store:'amazon',price:27.99,orig:45,pct:38,votes:29,date:Date.now()-10800000,thumb:'',type:'',coupon:null,brand:'Carhartt',cat:'tees',sizeMatch:true},
+  {id:'ts4',title:'Nike Air Max 270 Running Shoe Men Size 13 — Flash Sale 40% Off',link:'https://www.amazon.com/dp/B07DNP9B9N',store:'amazon',price:89.99,orig:150,pct:40,votes:44,date:Date.now()-1800000,thumb:'',type:'flash',coupon:null,brand:'Nike',cat:'shoes',sizeMatch:true},
+  {id:'ts5',title:'Pro Club Heavyweight Fleece Hoodie 2X/3X Graphite — Code: PROCLUB15',link:'https://www.proclubstore.com',store:'other',price:49.99,orig:79.99,pct:38,votes:36,date:Date.now()-14400000,thumb:'',type:'coupon',coupon:'PROCLUB15',brand:'Pro Club',cat:'outerwear',sizeMatch:true},
+  {id:'ts6',title:'Polo Ralph Lauren Big+Tall Classic Fit Polo Shirt 2X/3X — Clearance',link:'https://www.amazon.com/dp/B01N5HQNQO',store:'amazon',price:54.99,orig:98,pct:44,votes:19,date:Date.now()-21600000,thumb:'',type:'clearance',coupon:null,brand:'Ralph Lauren',cat:'tees',sizeMatch:true},
+  {id:'ts7',title:'Champion Reverse Weave Hoodie Big+Tall 2X/3X — 36% Off',link:'https://www.amazon.com/dp/B07Q2RNQXB',store:'amazon',price:34.99,orig:55,pct:36,votes:24,date:Date.now()-5400000,thumb:'',type:'',coupon:null,brand:'Champion',cat:'outerwear',sizeMatch:true},
+  {id:'ts8',title:'New Balance Fresh Foam 1080v12 Running Shoe Men Size 13 Wide — 35% Off',link:'https://www.amazon.com/dp/B09WGFKQ7M',store:'amazon',price:119.99,orig:184.99,pct:35,votes:41,date:Date.now()-9000000,thumb:'',type:'',coupon:null,brand:'New Balance',cat:'shoes',sizeMatch:true}
 ];
 
 // STATE
-var techDeals = [];
-var clothDeals = [];
-var tab = 'tech';
-var wl = JSON.parse(localStorage.getItem('dh_wl') || '[]');
-var als = JSON.parse(localStorage.getItem('dh_als') || '[]');
+var allDeals = [];
+var activeCat = 'all';
+var wl = JSON.parse(localStorage.getItem('tss_wl') || '[]');
+var als = JSON.parse(localStorage.getItem('tss_als') || '[]');
+var tss_votes = JSON.parse(localStorage.getItem('tss_votes') || '{}');
+var tss_tips = JSON.parse(localStorage.getItem('tss_tips') || '{}');
+var tss_subs = JSON.parse(localStorage.getItem('tss_subs') || '[]');
 var pendingAlert = null;
 var lastUpdated = Date.now();
-var tf = {type:'all', store:'all', sort:'score', priceRange:'all'};
-var cf = {size:'all', cat:'all', brand:'all', type:'all', sort:'score', priceRange:'all'};
+var f = {size:'all', brand:'all', type:'all', sort:'score', priceRange:'all'};
+var tss_profile = JSON.parse(localStorage.getItem('tss_profile') || 'null');
+var tss_brand_ratings = JSON.parse(localStorage.getItem('tss_brand_ratings') || '{}');
+var tss_notified = JSON.parse(localStorage.getItem('tss_notified') || '[]');
+var pendingRatingBrand = null;
+var ratingDraft = {fit:0, range:0, quality:0, style:0};
 
-// HELPERS
+var KNOWN_BRANDS = [
+  {key:'dxl',          name:'DXL (Destination XL)'},
+  {key:'pro club',     name:'Pro Club'},
+  {key:'kingsize',     name:'KingSize'},
+  {key:'carhartt',     name:'Carhartt'},
+  {key:'nike',         name:'Nike'},
+  {key:'adidas',       name:'Adidas'},
+  {key:"levi's",       name:"Levi's"},
+  {key:'lee',          name:'Lee'},
+  {key:'champion',     name:'Champion'},
+  {key:'hanes',        name:'Hanes'},
+  {key:'new balance',  name:'New Balance'},
+  {key:'duluth trading',name:'Duluth Trading'},
+  {key:'true classic', name:'True Classic'},
+  {key:'ralph lauren', name:'Ralph Lauren'},
+  {key:'jordan craig', name:'Jordan Craig'},
+  {key:'wrangler',     name:'Wrangler'},
+  {key:'dickies',      name:'Dickies'}
+];
+
+// ── HELPERS ──
 function scoreOf(pct, votes, sizeMatch, type, date) {
   if (type === 'penny') return 95;
   var ageHours = date ? (Date.now() - date) / 3600000 : 12;
@@ -448,8 +695,8 @@ function relTime(ms) {
   return Math.round(d/86400)+'d ago';
 }
 function storeInfo(s) {
-  var m = {amazon:{n:'Amazon',cls:'d-amz',e:'📦'}, bestbuy:{n:'Best Buy',cls:'d-bb',e:'🔵'}, newegg:{n:'Newegg',cls:'d-new',e:'🟠'}, walmart:{n:'Walmart',cls:'d-wmt',e:'🔵'}};
-  return m[s] || {n:'Slickdeals',cls:'d-oth',e:'🏷️'};
+  var m = {amazon:{n:'Amazon',cls:'d-amz',e:'📦'}, walmart:{n:'Walmart',cls:'d-wmt',e:'🛒'}};
+  return m[s] || {n:'Stocky Find',cls:'d-oth',e:'🏷️'};
 }
 function scClass(s) {
   if (s >= 80) return 'sc-ht';
@@ -472,31 +719,44 @@ function parsePrice(txt) {
 function detectStore(link) {
   var u=link.toLowerCase();
   if(u.includes('amazon')) return 'amazon';
-  if(u.includes('bestbuy')||u.includes('best buy')) return 'bestbuy';
-  if(u.includes('newegg')) return 'newegg';
   if(u.includes('walmart')) return 'walmart';
   return 'other';
 }
 function detectBrand(txt) {
   var t=txt.toLowerCase();
-  var bs=['pro club','nike','adidas',"levi's",'levis','lee ','wrangler','dickies','ben davis','carhartt','champion','dxl','true religion','hanes','gildan','new balance'];
+  var bs=['pro club','true classic','kingsize','king size','duluth trading','jordan craig','winston box','one bone','mvp collection','nike','adidas','carhartt','champion','hanes','new balance',"levi's",'levis','lee ','wrangler','dickies','ben davis','ralph lauren','polo ralph','old navy','duluth','true religion','gildan'];
   for(var i=0;i<bs.length;i++) if(t.includes(bs[i])) return bs[i].trim();
   return null;
 }
 function detectCat(txt) {
   var t=txt.toLowerCase();
-  if(/\b(shoes?|sneakers?|boots?|kicks)\b/.test(t)) return 'shoes';
-  if(/\b(shorts?|swim trunks?)\b/.test(t)) return 'shorts';
-  if(/\b(gym|athletic|workout|running|training|jogger|dri.?fit)\b/.test(t)) return 'athletic';
-  if(/\b(jeans?|denim)\b/.test(t)) return 'jeans';
-  if(/\b(button.?up|button.?down|dress shirt|flannel)\b/.test(t)) return 'button-ups';
-  if(/\b(jacket|hoodie|sweatshirt|windbreaker|coat|vest)\b/.test(t)) return 'outerwear';
-  if(/\b(t.?shirt|tee|graphic|crew neck|v.?neck)\b/.test(t)) return 'tees';
+  if(/\b(shoes?|sneakers?|boots?|kicks?|kicks)\b/.test(t)) return 'shoes';
+  if(/\b(gym|athletic|workout|running|training|jogger|dri.?fit|activewear)\b/.test(t)) return 'activewear';
+  if(/\b(jeans?|denim|pants?|shorts?|cargo)\b/.test(t)) return 'jeans';
+  if(/\b(jacket|hoodie|sweatshirt|coat|vest|fleece|pullover|puffer)\b/.test(t)) return 'outerwear';
+  if(/\b(t.?shirt|tee|graphic|crew|v.?neck|polo|henley|button)\b/.test(t)) return 'tees';
   return 'other';
 }
 function detectSizeMatch(txt) {
-  var t=txt.toLowerCase();
-  return ['2x','3x','2xl','3xl','xxl','xxxl',' xl ','size 13','us 13','13w',' 13 '].some(function(s){return t.includes(s);});
+  var t = txt.toLowerCase();
+  var keys = ['2x','2xl','xxl','3x','3xl','xxxl','4x','4xl','xxxxl','5x','5xl','big & tall','b&t','big and tall',' xl ','x-large','size 13','size 14','size 15','13w','14w','15w','wide width','wide fit'];
+  for(var i=0;i<keys.length;i++) if(t.includes(keys[i])) return true;
+  return false;
+}
+function detectSizeFilter(txt, key) {
+  var t = txt.toLowerCase();
+  var maps = {
+    xl:  [' xl ','x-large','(xl)'],
+    '2x':['2x','2xl','xxl'],
+    '3x':['3x','3xl','xxxl'],
+    '4x':['4x','4xl','xxxxl'],
+    '5x':['5x','5xl'],
+    '13plus':['size 13','size 14','size 15','13w','14w','15w','wide']
+  };
+  if(key === 'all') return true;
+  var ks = maps[key] || [];
+  for(var i=0;i<ks.length;i++) if(t.includes(ks[i])) return true;
+  return false;
 }
 function detectType(txt, price) {
   var t=txt.toLowerCase();
@@ -510,260 +770,559 @@ function extractCoupon(txt) {
   var m=txt.match(/(?:code|coupon|promo)[:\s]+([A-Z0-9]{5,15})/i);
   return m ? m[1].toUpperCase() : null;
 }
-
-// EXTRACT DIRECT STORE LINK FROM RSS DESCRIPTION
 function extractStoreLink(item) {
   var desc = item.description || '';
   try {
     var doc = new DOMParser().parseFromString(desc, 'text/html');
     var anchors = doc.querySelectorAll('a[href]');
     var skip = ['slickdeals.net','reddit.com','redd.it','google.com','javascript:'];
-    for (var i = 0; i < anchors.length; i++) {
-      var href = (anchors[i].getAttribute('href') || '').trim();
-      if (!href || !href.startsWith('http')) continue;
-      var blocked = false;
-      for (var j = 0; j < skip.length; j++) { if (href.indexOf(skip[j]) > -1) { blocked=true; break; } }
-      if (!blocked) return href;
+    for(var i=0;i<anchors.length;i++){
+      var href = (anchors[i].getAttribute('href')||'').trim();
+      if(!href||!href.startsWith('http')) continue;
+      var blocked=false;
+      for(var j=0;j<skip.length;j++){if(href.indexOf(skip[j])>-1){blocked=true;break;}}
+      if(!blocked) return href;
     }
   } catch(e){}
-  return item.link || '#';
+  return item.link||'#';
 }
-
-// EXTRACT BEST THUMBNAIL FROM RSS ITEM
-function extractThumb(item) {
-  if (item.thumbnail && item.thumbnail.length > 10) return item.thumbnail;
-  var desc = item.description || '';
+function amazonImg(url) {
+  if(!url||url.indexOf('amazon.')===-1) return null;
+  var m = url.match(/\/dp\/([A-Z0-9]{10})/i)
+          ||url.match(/\/gp\/product\/([A-Z0-9]{10})/i)
+          ||url.match(/[?&]asin=([A-Z0-9]{10})/i);
+  if(m&&m[1]&&m[1].length===10)
+    return 'https://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN='+m[1]+'&ServiceVersion=20070822&ID=AsinImage&WS=1&Format=SL250';
+  return null;
+}
+function extractThumb(item, storeLink) {
+  // 1. RSS thumbnail field
+  if(item.thumbnail&&item.thumbnail.length>10) return item.thumbnail;
+  // 2. Amazon ASIN from the actual store URL (after redirect extraction)
+  var aImg = amazonImg(storeLink||'') || amazonImg(item.link||'');
+  if(aImg) return aImg;
+  // 3. Amazon link buried in description
+  var desc = item.description||'';
   try {
-    var doc = new DOMParser().parseFromString(desc, 'text/html');
+    var doc = new DOMParser().parseFromString(desc,'text/html');
+    var anchors = doc.querySelectorAll('a[href]');
+    for(var i=0;i<anchors.length;i++){
+      var ai = amazonImg(anchors[i].getAttribute('href')||'');
+      if(ai) return ai;
+    }
+    // 4. First real img tag in description
     var img = doc.querySelector('img[src]');
-    if (img) {
-      var src = img.getAttribute('src') || '';
-      if (src.startsWith('http')) return src;
+    if(img){
+      var src=img.getAttribute('src')||'';
+      if(src.startsWith('http')&&src.indexOf('icon')===-1&&src.indexOf('pixel')===-1) return src;
     }
   } catch(e){}
   return '';
 }
+function applyPriceRange(deals, key) {
+  if(key==='all') return deals;
+  return deals.filter(function(d){
+    var p=d.price; if(p==null) return false;
+    if(key==='0-25')    return p<25;
+    if(key==='25-50')   return p>=25&&p<50;
+    if(key==='50-100')  return p>=50&&p<100;
+    if(key==='100-200') return p>=100&&p<200;
+    if(key==='200+')    return p>=200;
+    return true;
+  });
+}
 
-// PARSE FEED ITEM
-function parseItem(item, tabName) {
+// ── CLOTHING RELEVANCE GATE ──
+function isClothingRelevant(txt) {
+  var t = txt.toLowerCase();
+  // Hard block — never clothing
+  var blocked = ['deodorant','cologne','perfume','fragrance','shampoo','soap','razor','toothbrush','supplement','protein powder','vitamin','creatine','laptop','monitor','tablet','phone','iphone','airpod','headphone','speaker','tv ','television','mattress','pillow','blender','coffee maker','vacuum','luggage','backpack','wallet','sunglasses','watch','jewelry','ring ','necklace','bracelet'];
+  for(var i=0;i<blocked.length;i++) if(t.includes(blocked[i])) return false;
+  var clothKeys = ['shirt','tee','tees','jeans','pants','shorts','jacket','hoodie','coat','vest','sweater','shoes','sneaker','boot','kicks','polo','denim','legging','jogger','sweatpant','fleece','blazer','cardigan','flannel','cargo','outfit','clothing','apparel','wear','big & tall','big and tall','b&t','plus size','size 2x','size 3x','size xl','2xl','3xl','4xl','men\'s','mens','athletic','activewear','workwear','coverall','overalls','chino','trouser','henley','crewneck','turtleneck','sock','underwear','boxer','brief','thermal'];
+  for(var j=0;j<clothKeys.length;j++) if(t.includes(clothKeys[j])) return true;
+  return false;
+}
+
+// ── PARSE FEED ITEM ──
+function parseItem(item) {
   var txt = (item.title||'') + ' ' + (item.description||'');
   var pr = parsePrice(txt);
   var storeLink = extractStoreLink(item);
   var store = detectStore(storeLink + ' ' + (item.title||''));
   var type = detectType(txt, pr.sale);
   var coupon = extractCoupon(item.description||'');
-  var sizeMatch = tabName==='clothing' ? detectSizeMatch(txt) : false;
-  var brand = tabName==='clothing' ? detectBrand(txt) : null;
-  var cat = tabName==='clothing' ? detectCat(txt) : null;
+  var sizeMatch = detectSizeMatch(txt);
+  var brand = detectBrand(txt);
+  var cat = detectCat(txt);
   var votes = parseInt(((item.description||'').match(/(\d+)\s*(?:votes?|points?|upvotes?)/i)||[])[1]||0);
   var date = new Date(item.pubDate).getTime() || Date.now();
   var score = scoreOf(pr.pct, votes, sizeMatch, type, date);
   return {
-    id: 'r'+Math.random().toString(36).slice(2),
-    title: item.title||'Deal',
-    link: storeLink,
-    thumb: extractThumb(item),
-    store: store, price: pr.sale, orig: pr.orig, pct: pr.pct,
-    votes: votes, date: date,
-    type: type, coupon: coupon, sizeMatch: sizeMatch, brand: brand, cat: cat,
-    score: score, tab: tabName
+    id:'r'+Math.random().toString(36).slice(2),
+    title:item.title||'Deal',
+    link:storeLink,
+    thumb:extractThumb(item, storeLink),
+    store:store, price:pr.sale, orig:pr.orig, pct:pr.pct,
+    votes:votes, date:date,
+    type:type, coupon:coupon, sizeMatch:sizeMatch, brand:brand, cat:cat,
+    score:score
   };
 }
 
-// FETCH
+// ── FETCH ──
 function fetchTimeout(url, ms) {
   var ctrl = new AbortController();
-  var id = setTimeout(function(){ctrl.abort();}, ms);
-  return fetch(url, {signal:ctrl.signal}).then(function(r){clearTimeout(id);return r;}).catch(function(e){clearTimeout(id);throw e;});
+  var id = setTimeout(function(){ctrl.abort();},ms);
+  return fetch(url,{signal:ctrl.signal}).then(function(r){clearTimeout(id);return r;}).catch(function(e){clearTimeout(id);throw e;});
 }
-function fetchFeed(url, tabName) {
+function fetchFeed(url) {
   var api = RSS2JSON_BASE + encodeURIComponent(url);
-  return fetchTimeout(api, 9000).then(function(r){return r.json();}).then(function(d){
+  return fetchTimeout(api,9000).then(function(r){return r.json();}).then(function(d){
     if(!d.items) return [];
-    return d.items.map(function(i){return parseItem(i,tabName);});
+    return d.items.map(function(i){return parseItem(i);});
   }).catch(function(){return [];});
 }
 
-// RENDER
+// ── PROFILE FUNCTIONS ──
+function isProfileMatch(d) {
+  if(!tss_profile || !tss_profile.set) return d.sizeMatch;
+  var txt = (d.title+' '+d.title).toLowerCase();
+  var sizeHit = tss_profile.sizes.some(function(s){return detectSizeFilter(txt,s);});
+  var brandHit = tss_profile.brands.length>0 && tss_profile.brands.some(function(b){return (d.brand||'').toLowerCase().includes(b);});
+  return sizeHit || brandHit;
+}
+function isYourPick(d) {
+  if(!tss_profile || !tss_profile.set || !d.brand) return false;
+  var txt = (d.title+' '+d.title).toLowerCase();
+  var sizeHit = tss_profile.sizes.some(function(s){return detectSizeFilter(txt,s);});
+  var brandHit = tss_profile.brands.some(function(b){return (d.brand||'').toLowerCase().includes(b);});
+  return sizeHit && brandHit;
+}
+function profileScoreBoost(d) {
+  if(!tss_profile || !tss_profile.set) return 0;
+  var txt = (d.title+' '+d.title).toLowerCase();
+  var sizeHit = tss_profile.sizes.some(function(s){return detectSizeFilter(txt,s);});
+  var brandHit = tss_profile.brands.some(function(b){return (d.brand||'').toLowerCase().includes(b);});
+  if(sizeHit && brandHit) return 20;
+  if(sizeHit || brandHit) return 8;
+  return 0;
+}
+function openProfile() {
+  if(tss_profile && tss_profile.set) {
+    document.querySelectorAll('.check-pill').forEach(function(p){
+      var g = p.dataset.group, v = p.dataset.val;
+      var match = (g==='sizes'&&tss_profile.sizes.indexOf(v)>-1)
+               || (g==='shoes'&&tss_profile.shoes.indexOf(v)>-1)
+               || (g==='brands'&&tss_profile.brands.indexOf(v)>-1);
+      p.classList.toggle('on', match);
+    });
+  }
+  document.getElementById('prof-modal').classList.add('open');
+}
+function saveProfile() {
+  var sizes=[], shoes=[], brands=[];
+  document.querySelectorAll('.check-pill.on').forEach(function(p){
+    if(p.dataset.group==='sizes') sizes.push(p.dataset.val);
+    if(p.dataset.group==='shoes') shoes.push(p.dataset.val);
+    if(p.dataset.group==='brands') brands.push(p.dataset.val);
+  });
+  tss_profile = {sizes:sizes, shoes:shoes, brands:brands, set:true};
+  localStorage.setItem('tss_profile', JSON.stringify(tss_profile));
+  document.getElementById('prof-modal').classList.remove('open');
+  render();
+  toast('Profile saved! 🎯 Your feed is personalized.');
+  if('Notification' in window && Notification.permission==='default') {
+    setTimeout(function(){ document.getElementById('notif-banner').classList.add('open'); }, 900);
+  }
+}
+
+// ── NOTIFICATION FUNCTIONS ──
+function enableNotifications() {
+  if(!('Notification' in window)){toast('Notifications not supported here.');return;}
+  Notification.requestPermission().then(function(perm){
+    if(perm==='granted'){
+      localStorage.setItem('tss_notif_enabled','true');
+      document.getElementById('notif-banner').classList.remove('open');
+      document.getElementById('notif-btn').classList.add('on');
+      toast('Notifications on! 🔔 We\'ll alert you on new deals.');
+    } else {
+      toast('Notification permission denied.');
+    }
+  });
+}
+function checkNewProfileDeals(items) {
+  if(!('Notification' in window)||Notification.permission!=='granted') return;
+  if(!tss_profile||!tss_profile.set) return;
+  var matched = items.filter(function(d){
+    return isProfileMatch(d) && tss_notified.indexOf(d.id)===-1;
+  });
+  if(!matched.length) return;
+  var top = matched[0];
+  try {
+    var n = new Notification('🎯 New deal on The Stocky Standard', {
+      body: top.title.slice(0,80)+(top.price?' — $'+top.price.toFixed(2):''),
+      tag: 'tss-'+top.id
+    });
+    n.onclick = function(){window.focus();};
+  } catch(e){}
+  matched.slice(0,5).forEach(function(d){ if(tss_notified.indexOf(d.id)===-1) tss_notified.push(d.id); });
+  localStorage.setItem('tss_notified', JSON.stringify(tss_notified.slice(-200)));
+}
+
+// ── BRAND RATING FUNCTIONS ──
+function starsStr(rating, max) {
+  var s=''; for(var i=1;i<=max;i++) s+=(i<=rating?'⭐':'☆'); return s;
+}
+function brandAvg(r) {
+  if(!r||!r.fit) return 0;
+  return Math.round((r.fit+r.range+r.quality+r.style)/4*10)/10;
+}
+function renderBrandDir() {
+  var grid = document.getElementById('brand-dir-grid');
+  grid.innerHTML = KNOWN_BRANDS.map(function(b){
+    var r = tss_brand_ratings[b.key];
+    var avg = r ? brandAvg(r) : 0;
+    var rated = r && r.fit>0;
+    return '<div class="brand-card">'
+      +'<div class="brand-card-name">'+b.name+'</div>'
+      +(rated
+        ? '<div class="brand-overall"><span class="brand-stars-lg">'+starsStr(Math.round(avg),5)+'</span><span class="brand-avg-num">'+avg+'</span></div>'
+          +'<div class="brand-dims">'
+          +'<div class="brand-dim-row"><span class="brand-dim-lbl">Fit Accuracy</span><span class="brand-dim-stars">'+starsStr(r.fit,5)+'</span></div>'
+          +'<div class="brand-dim-row"><span class="brand-dim-lbl">Size Range</span><span class="brand-dim-stars">'+starsStr(r.range,5)+'</span></div>'
+          +'<div class="brand-dim-row"><span class="brand-dim-lbl">Quality/Price</span><span class="brand-dim-stars">'+starsStr(r.quality,5)+'</span></div>'
+          +'<div class="brand-dim-row"><span class="brand-dim-lbl">Style</span><span class="brand-dim-stars">'+starsStr(r.style,5)+'</span></div>'
+          +'</div>'
+        : '<div class="brand-unrated">Be the first to rate &#8594;</div>')
+      +'<button class="rate-it-btn'+(rated?' rated':'')
+        +'" onclick="openRateModal(\''+b.key+'\',\''+b.name+'\')">'
+        +(rated?'Update Rating':'Rate This Brand')+'</button>'
+      +'</div>';
+  }).join('');
+}
+function openRateModal(key, name) {
+  pendingRatingBrand = key;
+  var ex = tss_brand_ratings[key]||{};
+  ratingDraft = {fit:ex.fit||0, range:ex.range||0, quality:ex.quality||0, style:ex.style||0};
+  document.getElementById('rate-brand-lbl').textContent = name;
+  buildStarRows();
+  document.getElementById('rate-modal').classList.add('open');
+}
+function buildStarRows() {
+  var dims = [
+    {id:'stars-fit',key:'fit'}, {id:'stars-range',key:'range'},
+    {id:'stars-quality',key:'quality'}, {id:'stars-style',key:'style'}
+  ];
+  dims.forEach(function(dim){
+    var row = document.getElementById(dim.id);
+    row.innerHTML='';
+    for(var i=1;i<=5;i++){
+      (function(val){
+        var btn = document.createElement('button');
+        btn.className='star-btn'+(val<=ratingDraft[dim.key]?' on':'');
+        btn.textContent='⭐'; btn.type='button';
+        btn.addEventListener('click',function(){ratingDraft[dim.key]=val;buildStarRows();});
+        row.appendChild(btn);
+      })(i);
+    }
+  });
+}
+function saveRating() {
+  if(!pendingRatingBrand) return;
+  if(!ratingDraft.fit||!ratingDraft.range||!ratingDraft.quality||!ratingDraft.style){
+    toast('Please rate all 4 dimensions first.'); return;
+  }
+  tss_brand_ratings[pendingRatingBrand] = {
+    fit:ratingDraft.fit, range:ratingDraft.range, quality:ratingDraft.quality, style:ratingDraft.style
+  };
+  localStorage.setItem('tss_brand_ratings', JSON.stringify(tss_brand_ratings));
+  document.getElementById('rate-modal').classList.remove('open');
+  toast('Rating saved! ⭐');
+  pendingRatingBrand = null;
+  renderBrandDir();
+  render();
+}
+
+// ── TIP FUNCTIONS ──
+function saveTip(id) {
+  var ta = document.getElementById('tipinput-'+id);
+  if(!ta) return;
+  var val = ta.value.trim();
+  if(val) { tss_tips[id]=val; } else { delete tss_tips[id]; }
+  localStorage.setItem('tss_tips', JSON.stringify(tss_tips));
+  renderTipWrap(id);
+}
+function renderTipWrap(id) {
+  var wrap = document.getElementById('tip-'+id);
+  if(!wrap) return;
+  var tip = tss_tips[id];
+  if(tip) {
+    wrap.innerHTML = '<div class="tip-text">&#x1F4AC; &ldquo;'+tip+'&rdquo; <button class="tip-edit-btn" onclick="editTip(\''+id+'\')">&#x270F;&#xFE0F;</button></div>';
+  } else {
+    wrap.innerHTML = '<button class="tip-add-btn" onclick="editTip(\''+id+'\')">&#x1F4AC; Add a tip (e.g. &ldquo;runs small, size up&rdquo;)</button>';
+  }
+}
+function editTip(id) {
+  var wrap = document.getElementById('tip-'+id);
+  if(!wrap) return;
+  var existing = tss_tips[id] || '';
+  wrap.innerHTML = '<textarea class="tip-input" id="tipinput-'+id+'" rows="2" placeholder="e.g. runs small, size up">'+existing+'</textarea>'
+    +'<div class="tip-actions"><button class="tip-save-btn" onclick="saveTip(\''+id+'\')">Save</button><button class="tip-cancel-btn" onclick="renderTipWrap(\''+id+'\')">Cancel</button></div>';
+  var ta = document.getElementById('tipinput-'+id);
+  if(ta) ta.focus();
+}
+
+// ── VOTE FUNCTIONS ──
+function upvote(id) {
+  var cur = tss_votes[id] || 0;
+  if(cur > 0) { tss_votes[id] = 0; } else { tss_votes[id] = (cur + 1); }
+  localStorage.setItem('tss_votes', JSON.stringify(tss_votes));
+  renderVoteRow(id);
+  updateCommunityBadge(id);
+}
+function downvote(id) {
+  tss_votes[id] = Math.max(0, (tss_votes[id]||0) - 1);
+  localStorage.setItem('tss_votes', JSON.stringify(tss_votes));
+  renderVoteRow(id);
+  updateCommunityBadge(id);
+}
+function renderVoteRow(id) {
+  var row = document.getElementById('vrow-'+id);
+  if(!row) return;
+  var v = tss_votes[id] || 0;
+  var voted = v > 0;
+  row.querySelector('.vote-up').className = 'vote-btn vote-up' + (voted?' voted-up':'');
+  row.querySelector('.vote-up').innerHTML = '&#x1F44D; ' + v;
+}
+function updateCommunityBadge(id) {
+  var v = tss_votes[id] || 0;
+  var card = document.querySelector('.card[data-id="'+id+'"]');
+  if(!card) return;
+  card.classList.toggle('community-pick', v >= 3);
+  var badgeEl = card.querySelector('.b-cpick');
+  if(v >= 3 && !badgeEl) {
+    var badges = card.querySelector('.badges');
+    if(badges) {
+      var b = document.createElement('span');
+      b.className = 'badge b-cpick';
+      b.textContent = '🏆 Community Pick';
+      badges.insertBefore(b, badges.firstChild);
+    }
+  } else if(v < 3 && badgeEl) {
+    badgeEl.remove();
+  }
+  var cpRib = card.querySelector('.cp-ribbon');
+  if(v >= 3 && !cpRib) {
+    var imgWrap = card.querySelector('.card-img');
+    if(imgWrap) {
+      var r = document.createElement('div');
+      r.className = 'cp-ribbon';
+      r.textContent = '🏆 Community Pick';
+      imgWrap.appendChild(r);
+    }
+  } else if(v < 3 && cpRib) {
+    cpRib.remove();
+  }
+}
+
+// ── MAKE CARD ──
 function makeCard(d) {
   var score = d.score || scoreOf(d.pct, d.votes, d.sizeMatch, d.type, d.date);
   var si = storeInfo(d.store);
   var inWL = wl.some(function(w){return w.id===d.id;});
   var hasAl = als.some(function(a){return a.id===d.id;});
+  var voteCount = tss_votes[d.id] || 0;
+  var voted = voteCount > 0;
+  var isCPick = voteCount >= 3;
+  var hasTip = !!tss_tips[d.id];
 
-  var priceH = d.price!=null
+  var priceH = d.price != null
     ? '<span class="sale">$'+d.price.toFixed(2)+'</span>'
       +(d.orig?'<span class="orig">$'+d.orig.toFixed(2)+'</span>':'')
       +(d.pct?'<span class="pct">-'+d.pct+'%</span>':'')
-    : '<span class="sale" style="font-size:13px;color:var(--muted)">See deal</span>';
+    : '<span class="sale" style="font-size:13px;color:var(--muted)">See deal →</span>';
 
+  var yourPick = isYourPick(d);
+  var brandRating = d.brand ? tss_brand_ratings[(d.brand||'').toLowerCase()] : null;
+  var miniStar = brandRating && brandRating.fit
+    ? '<span class="mini-star">⭐'+brandAvg(brandRating)+'</span>'
+    : '';
   var badgeH = ''
-    +(d.type==='penny'?'<span class="badge b-penny">💰 Penny Deal</span>':'')
+    +(isCPick?'<span class="badge b-cpick">🏆 Community Pick</span>':'')
+    +(yourPick?'<span class="badge b-pick">🎯 Your Pick</span>':d.sizeMatch?'<span class="badge b-size">🎯 Your Size</span>':'')
+    +(d.type==='penny'?'<span class="badge b-penny">💰 Penny</span>':'')
     +(d.type==='clearance'?'<span class="badge b-clear">Clearance</span>':'')
     +(d.type==='flash'?'<span class="badge b-flash">⚡ Flash</span>':'')
-    +(d.type==='coupon'?'<span class="badge b-coup">🏷️ Coupon</span>':'')
-    +(d.sizeMatch?'<span class="badge b-size">🎯 Your Size</span>':'')
-    +(d.brand?'<span class="badge b-brand">'+d.brand+'</span>':'');
+    +(d.type==='coupon'?'<span class="badge b-coup">Coupon</span>':'')
+    +(d.brand?'<span class="badge b-brand">'+d.brand+miniStar+'</span>':'');
 
   var couponH = d.coupon
     ? '<div class="coup-row"><span class="coup-code">'+d.coupon+'</span><button class="copy-btn" data-code="'+d.coupon+'">Copy</button></div>'
     : '';
 
-  var hotRibbon = score >= 80 ? '<div class="hot-ribbon">🔥 HOT</div>' : '';
-  var thumbH = '<div class="card-img">'
-    + hotRibbon
+  var hotRib = score >= 80 ? '<div class="hot-ribbon">🔥 HOT</div>' : '';
+  var cpRib = isCPick ? '<div class="cp-ribbon">🏆 Pick</div>' : '';
+  var imgH = '<div class="card-img">'
+    + hotRib + cpRib
     + (d.thumb
-        ? '<img class="thumb" src="'+d.thumb+'" alt="" onerror="this.style.display=\'none\'">'
-        : '<div class="no-thumb">'+si.e+'</div>')
+      ? '<img class="thumb" src="'+d.thumb+'" alt="" onerror="this.style.display=\'none\'">'
+      : '<div class="no-thumb">'+si.e+'</div>')
     + '</div>';
 
-  var onlineOnly = d.store==='amazon'||d.store==='newegg'||d.store==='other';
+  var tipH = hasTip
+    ? '<div class="tip-wrap" id="tip-'+d.id+'"><div class="tip-text">&#x1F4AC; &ldquo;'+tss_tips[d.id]+'&rdquo; <button class="tip-edit-btn" onclick="editTip(\''+d.id+'\')">&#x270F;&#xFE0F;</button></div></div>'
+    : '<div class="tip-wrap" id="tip-'+d.id+'"><button class="tip-add-btn" onclick="editTip(\''+d.id+'\')">&#x1F4AC; Add a tip</button></div>';
+
+  var voteH = '<div class="vote-row" id="vrow-'+d.id+'">'
+    +'<button class="vote-btn vote-up'+(voted?' voted-up':'')+'" onclick="upvote(\''+d.id+'\')">&#x1F44D; '+voteCount+'</button>'
+    +'<button class="vote-btn vote-dn" onclick="downvote(\''+d.id+'\')">&#x1F44E;</button>'
+    +'</div>';
 
   var div = document.createElement('div');
-  div.className = 'card' + (score >= 80 ? ' hot-deal' : '');
+  div.className = 'card' + (score>=80?' hot-deal':'') + (isCPick?' community-pick':'');
   div.dataset.id = d.id;
   div.innerHTML =
     '<div class="card-top">'
       +'<div class="store-tag"><span class="dot '+si.cls+'"></span>'+si.n+'</div>'
       +'<div class="score '+scClass(score)+'">'+score+'</div>'
     +'</div>'
-    +thumbH
+    +imgH
     +'<div class="card-body">'
       +'<div class="ctitle">'+d.title+'</div>'
       +'<div class="prices">'+priceH+'</div>'
+      +voteH
+      +tipH
       +'<div class="badges">'+badgeH+'</div>'
       +couponH
       +'<div class="meta">'+relTime(d.date)+'</div>'
-      +'<button class="avail-toggle">▼ Availability &amp; Shipping</button>'
-      +'<div class="avail-panel" id="av-'+d.id+'">'
-        +'<div class="arow"><span class="albl">Shipping</span><span class="aval">'+(d.store==='amazon'?'Prime eligible':'Check site')+'</span></div>'
-        +(onlineOnly
-          ? '<div class="arow"><span class="albl">Availability</span><span class="aval">Online only</span></div>'
-          : '<div class="arow"><span class="albl">In-Store</span><span class="aval" id="is-'+d.id+'">Check in store</span></div>')
-      +'</div>'
     +'</div>'
     +'<div class="card-foot">'
       +'<a class="view-btn" href="'+d.link+'" target="_blank" rel="noopener">View Deal →</a>'
-      +'<button class="ico-btn btn-star'+(inWL?' on':'')+ '" data-id="'+d.id+'" title="Watchlist">'+(inWL?'⭐':'☆')+'</button>'
-      +'<button class="ico-btn btn-bell'+(hasAl?' on':'')+ '" data-id="'+d.id+'" title="Set Alert">🔔</button>'
+      +'<button class="ico-btn btn-star'+(inWL?' on':'')+ '" data-id="'+d.id+'" title="Save">'+(inWL?'💾':'🔖')+'</button>'
+      +'<button class="ico-btn btn-bell'+(hasAl?' on':'')+ '" data-id="'+d.id+'" title="Price alert">🔔</button>'
       +'<button class="ico-btn btn-share" data-id="'+d.id+'" title="Share deal">📤</button>'
     +'</div>';
 
-  div.querySelector('.avail-toggle').addEventListener('click', function(){
-    var p=document.getElementById('av-'+d.id);
-    var open=p.classList.toggle('open');
-    this.textContent=(open?'▲':'▼')+' Availability & Shipping';
+  var cp = div.querySelector('.copy-btn');
+  if(cp) cp.addEventListener('click',function(){
+    navigator.clipboard.writeText(this.dataset.code).then(function(){toast('Code copied!');});
   });
-  var cp=div.querySelector('.copy-btn');
-  if(cp) cp.addEventListener('click', function(){
-    navigator.clipboard.writeText(this.dataset.code).then(function(){toast('Copied!');});
-  });
-  div.querySelector('.btn-star').addEventListener('click', function(){
+  div.querySelector('.btn-star').addEventListener('click',function(){
     var idx=wl.findIndex(function(w){return w.id===d.id;});
-    if(idx>-1){wl.splice(idx,1);this.textContent='☆';this.classList.remove('on');toast('Removed from watchlist');}
-    else{wl.push({id:d.id,title:d.title,link:d.link,store:d.store,price:d.price});this.textContent='⭐';this.classList.add('on');toast('Added to watchlist ⭐');}
+    if(idx>-1){wl.splice(idx,1);this.innerHTML='🔖';this.classList.remove('on');toast('Removed from saved');}
+    else{wl.push({id:d.id,title:d.title,link:d.link,store:d.store,price:d.price});this.innerHTML='💾';this.classList.add('on');toast('Saved 💾');}
     saveWL();
   });
-  div.querySelector('.btn-bell').addEventListener('click', function(){openAlert(d);});
-  div.querySelector('.btn-share').addEventListener('click', function(){
-    navigator.clipboard.writeText(d.link).then(function(){toast('Link copied! 📤');}).catch(function(){
-      prompt('Copy this link:', d.link);
-    });
+  div.querySelector('.btn-bell').addEventListener('click',function(){openAlert(d);});
+  div.querySelector('.btn-share').addEventListener('click',function(){
+    navigator.clipboard.writeText(d.link).then(function(){toast('Link copied! 📤');}).catch(function(){prompt('Copy this link:',d.link);});
   });
   return div;
 }
 
-function applyPriceRange(deals, rangeKey) {
-  if (rangeKey === 'all') return deals;
-  return deals.filter(function(d){
-    var p = d.price;
-    if (p == null) return false;
-    if (rangeKey === '0-25')    return p < 25;
-    if (rangeKey === '25-50')   return p >= 25 && p < 50;
-    if (rangeKey === '50-100')  return p >= 50 && p < 100;
-    if (rangeKey === '100-200') return p >= 100 && p < 200;
-    if (rangeKey === '200+')    return p >= 200;
-    return true;
-  });
-}
-
+// ── RENDER ──
 function render() {
-  var deals = tab==='tech' ? techDeals.slice() : clothDeals.slice();
-  var f = tab==='tech' ? tf : cf;
+  // Brand directory view toggle
+  var isBrandView = activeCat === 'brands';
+  document.getElementById('brand-dir').classList.toggle('show', isBrandView);
+  document.getElementById('main').style.display = isBrandView ? 'none' : '';
+  document.getElementById('filters').style.display = isBrandView ? 'none' : '';
+  document.getElementById('store-links').style.display = isBrandView ? 'none' : '';
+  if(isBrandView){ renderBrandDir(); return; }
+
+  var deals = allDeals.slice();
+
+  // Inject profile score boost
+  deals = deals.map(function(d){
+    var boost = profileScoreBoost(d);
+    return boost > 0 ? Object.assign({},d,{score:Math.min(100,(d.score||0)+boost)}) : d;
+  });
 
   // Age filter — drop deals older than 72h
-  var cutoff = Date.now() - 72 * 3600 * 1000;
-  deals = deals.filter(function(d){ return d.date > cutoff; });
+  var cutoff = Date.now() - 72*3600*1000;
+  deals = deals.filter(function(d){return d.date > cutoff;});
+  // Quality gate — 25%+ off OR has a coupon code OR is community-upvoted
+  deals = deals.filter(function(d){
+    return (d.pct && d.pct >= 25) || d.coupon || (tss_votes[d.id]||0) >= 1 || d.type==='penny';
+  });
 
-  if(tab==='tech'){
-    if(f.type!=='all') deals=deals.filter(function(d){return d.type===f.type;});
-    if(f.store!=='all') deals=deals.filter(function(d){return d.store===f.store;});
-  } else {
-    if(f.size!=='all'){
-      var sm={xl:[' xl ','x-large'],'2x':['2x','2xl','xxl'],'3x':['3x','3xl','xxxl'],'13':['13','13w','size 13']};
-      var keys=sm[f.size]||[];
-      deals=deals.filter(function(d){return keys.some(function(k){return (d.title+' ').toLowerCase().includes(k);});});
-    }
-    if(f.cat!=='all') deals=deals.filter(function(d){return d.cat===f.cat;});
-    if(f.brand!=='all') deals=deals.filter(function(d){return (d.brand||'').toLowerCase().includes(f.brand);});
-    if(f.type!=='all') deals=deals.filter(function(d){return d.type===f.type;});
+  // Category filter
+  if(activeCat !== 'all') {
+    deals = deals.filter(function(d){return d.cat === activeCat;});
   }
-  // Price range filter (both tabs)
+
+  // Size filter
+  if(f.size !== 'all') {
+    deals = deals.filter(function(d){return detectSizeFilter(d.title+' '+d.title, f.size);});
+  }
+  // Brand filter
+  if(f.brand !== 'all') {
+    deals = deals.filter(function(d){return (d.brand||'').toLowerCase().includes(f.brand);});
+  }
+  // Type filter
+  if(f.type === 'community') {
+    deals = deals.filter(function(d){return (tss_votes[d.id]||0) >= 1;});
+  } else if(f.type !== 'all') {
+    deals = deals.filter(function(d){return d.type === f.type;});
+  }
+  // Price range
   deals = applyPriceRange(deals, f.priceRange);
-  var sorts={
-    score:function(a,b){return (b.score||0)-(a.score||0);},
-    newest:function(a,b){return b.date-a.date;},
+
+  // Sort
+  var sorts = {
+    score:      function(a,b){return (b.score||0)-(a.score||0);},
+    newest:     function(a,b){return b.date-a.date;},
     'price-asc':function(a,b){return (a.price||9999)-(b.price||9999);},
     'price-desc':function(a,b){return (b.price||0)-(a.price||0);},
-    pct:function(a,b){return (b.pct||0)-(a.pct||0);},
-    votes:function(a,b){return (b.votes||0)-(a.votes||0);}
+    pct:        function(a,b){return (b.pct||0)-(a.pct||0);},
+    upvotes:    function(a,b){return (tss_votes[b.id]||0)-(tss_votes[a.id]||0);}
   };
-  deals.sort(sorts[f.sort]||sorts.score);
+  deals.sort(sorts[f.sort] || sorts.score);
 
-  document.getElementById('s-total').textContent=deals.length;
-  document.getElementById('s-hot').textContent=deals.filter(function(d){return (d.pct||0)>=50;}).length;
-  document.getElementById('s-penny').textContent=deals.filter(function(d){return d.type==='penny';}).length;
-  document.getElementById('s-size').textContent=deals.filter(function(d){return d.sizeMatch;}).length;
+  // Stats
+  document.getElementById('s-total').textContent = deals.length;
+  document.getElementById('s-hot').textContent = deals.filter(function(d){return (d.pct||0)>=50;}).length;
+  document.getElementById('s-size').textContent = deals.filter(function(d){return isProfileMatch(d);}).length;
+  document.getElementById('s-penny').textContent = deals.filter(function(d){return d.type==='penny';}).length;
 
-  var grid=document.getElementById('grid');
-  grid.innerHTML='';
+  var grid = document.getElementById('grid');
+  grid.innerHTML = '';
   if(!deals.length){
-    grid.innerHTML='<div class="empty"><div class="ei">🔍</div><h3>No deals found</h3><p>Try adjusting your filters or check back soon</p></div>';
+    grid.innerHTML = '<div class="empty"><div class="ei">&#8982;</div><h3>Nothing\'s on sale in your size today.</h3><p>We won\'t pretend otherwise. Check back at 6 a.m. — that\'s when most partners drop new prices.</p></div>';
+    updateClear();
     return;
   }
   deals.forEach(function(d){grid.appendChild(makeCard(d));});
   updateClear();
 }
 
-function updateClear(){
-  var f=tab==='tech'?tf:cf;
-  var dirty=tab==='tech'
-    ? f.type!=='all'||f.store!=='all'||f.priceRange!=='all'
-    : f.size!=='all'||f.cat!=='all'||f.brand!=='all'||f.type!=='all'||f.priceRange!=='all';
-  document.getElementById(tab==='tech'?'clr-tech':'clr-cloth').classList.toggle('show',dirty);
+function updateClear() {
+  var dirty = f.size!=='all'||f.brand!=='all'||f.type!=='all'||f.priceRange!=='all';
+  document.getElementById('clr-f').classList.toggle('show', dirty);
 }
 
-// CHIPS
-function initChips(id, key, obj){
+function initChips(id, key, obj) {
   document.getElementById(id).addEventListener('click',function(e){
-    var b=e.target.closest('.chip'); if(!b) return;
+    var b = e.target.closest('.chip'); if(!b) return;
     this.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
     b.classList.add('on');
-    obj[key]=b.dataset.v;
+    obj[key] = b.dataset.v;
     render();
   });
 }
 
-// WATCHLIST
-function saveWL(){
-  localStorage.setItem('dh_wl',JSON.stringify(wl));
-  document.getElementById('wl-n').textContent=wl.length;
+// ── WATCHLIST ──
+function saveWL() {
+  localStorage.setItem('tss_wl', JSON.stringify(wl));
+  document.getElementById('wl-n').textContent = wl.length;
+  var badge = document.getElementById('wl-n-badge');
+  if(badge) badge.textContent = wl.length;
   renderWL();
 }
-function renderWL(){
-  var b=document.getElementById('wl-body');
-  if(!wl.length){b.innerHTML='<div class="wl-empty">⭐ No saved deals yet</div>';return;}
-  b.innerHTML=wl.map(function(d){
+function renderWL() {
+  var b = document.getElementById('wl-body');
+  if(!wl.length){b.innerHTML='<div class="wl-empty">💾 No saved deals yet</div>';return;}
+  b.innerHTML = wl.map(function(d){
     return '<div class="wli"><div class="wli-info">'
       +'<div class="wli-title">'+d.title+'</div>'
       +(d.price!=null?'<div class="wli-price">$'+d.price.toFixed(2)+'</div>':'')
@@ -772,144 +1331,123 @@ function renderWL(){
   }).join('');
   b.querySelectorAll('.wli-rm').forEach(function(btn){
     btn.addEventListener('click',function(){
-      wl=wl.filter(function(w){return w.id!==btn.dataset.id;});
+      wl = wl.filter(function(w){return w.id!==btn.dataset.id;});
       saveWL();
-      var s=document.querySelector('.btn-star[data-id="'+btn.dataset.id+'"]');
-      if(s){s.textContent='☆';s.classList.remove('on');}
+      var s = document.querySelector('.btn-star[data-id="'+btn.dataset.id+'"]');
+      if(s){s.innerHTML='🔖';s.classList.remove('on');}
     });
   });
 }
 
-// ALERTS
-function openAlert(d){
-  pendingAlert=d;
-  document.getElementById('al-title').textContent=d.title.slice(0,60)+'...';
-  document.getElementById('al-input').value=d.price?(d.price*0.9).toFixed(2):'';
+// ── ALERTS ──
+function openAlert(d) {
+  pendingAlert = d;
+  document.getElementById('al-title').textContent = d.title.slice(0,60)+'...';
+  document.getElementById('al-input').value = d.price?(d.price*0.9).toFixed(2):'';
   document.getElementById('al-modal').classList.add('open');
 }
-function saveAls(){localStorage.setItem('dh_als',JSON.stringify(als));}
-function checkAlerts(){
-  var fired=als.filter(function(a){return a.curPrice&&a.targetPrice&&a.curPrice<=a.targetPrice;});
+function saveAls(){localStorage.setItem('tss_als',JSON.stringify(als));}
+function checkAlerts() {
+  var fired = als.filter(function(a){return a.curPrice&&a.targetPrice&&a.curPrice<=a.targetPrice;});
   if(!fired.length) return;
-  var b=document.getElementById('al-banner');
-  b.innerHTML=fired.map(function(a){
-    return '🔔 <strong>'+a.title.slice(0,40)+'</strong> hit $'+a.curPrice+' (your target: $'+a.targetPrice+')';
-  }).join(' &nbsp;|&nbsp; ')+' <button onclick="document.getElementById(\'al-banner\').classList.remove(\'open\')" style="margin-left:10px;border:1px solid #c8a400;background:none;padding:2px 8px;cursor:pointer;border-radius:3px;font-size:11px;">Dismiss</button>';
+  var b = document.getElementById('al-banner');
+  b.innerHTML = fired.map(function(a){
+    return '🔔 <strong>'+a.title.slice(0,40)+'</strong> hit $'+a.curPrice+' (target: $'+a.targetPrice+')';
+  }).join(' &nbsp;|&nbsp; ')+' <button onclick="document.getElementById(\'al-banner\').classList.remove(\'open\')" style="margin-left:10px;border:1px solid var(--gold);background:none;padding:2px 8px;cursor:pointer;border-radius:3px;font-size:11px;">Dismiss</button>';
   b.classList.add('open');
 }
 
-// GEOLOCATION
-function reverseGeo(lat,lon){
-  fetch('https://nominatim.openstreetmap.org/reverse?lat='+lat+'&lon='+lon+'&format=json',{headers:{'Accept-Language':'en'}})
-    .then(function(r){return r.json();}).then(function(d){
-      var a=d.address||{};
-      var city=a.city||a.town||a.village||'';
-      var st=(a.state||'').slice(0,2).toUpperCase();
-      var zip=a.postcode||'';
-      document.getElementById('loc-txt').textContent=city+', '+st+' '+zip;
-      document.getElementById('zip').value=zip;
-    }).catch(function(){});
-}
-function forwardGeo(zip){
-  fetch('https://nominatim.openstreetmap.org/search?postalcode='+encodeURIComponent(zip)+'&countrycodes=us&format=json&addressdetails=1',{headers:{'Accept-Language':'en'}})
-    .then(function(r){return r.json();}).then(function(d){
-      if(!d||!d[0]) return;
-      var a=d[0].address||{};
-      var city=a.city||a.town||a.village||a.county||'';
-      var st=(a.state||'').slice(0,2).toUpperCase();
-      document.getElementById('loc-txt').textContent=city+', '+st+' '+zip;
-    }).catch(function(){});
-}
-
-// LOAD
-function loadDeals(){
+// ── LOAD ──
+function loadDeals() {
   lastUpdated = Date.now();
   var lu = document.getElementById('last-updated');
   if(lu) lu.textContent = 'Just updated';
 
-  // Show mock data immediately — never blank
-  techDeals = MOCK_TECH.map(function(d){return Object.assign({},d,{score:scoreOf(d.pct,d.votes,false,d.type,d.date)});});
-  clothDeals = MOCK_CLOTH.map(function(d){return Object.assign({},d,{score:scoreOf(d.pct,d.votes,d.sizeMatch,d.type,d.date)});});
+  // Show mock data immediately — resolve Amazon images from link URLs
+  allDeals = MOCK_DEALS.map(function(d){
+    var thumb = d.thumb || amazonImg(d.link||'') || '';
+    return Object.assign({},d,{score:scoreOf(d.pct,d.votes,d.sizeMatch,d.type,d.date), thumb:thumb});
+  });
   render();
 
-  // Fetch live data in background
-  var techP = TECH_FEEDS.map(function(u){return fetchFeed(u,'tech');});
-  var clothP = CLOTH_FEEDS.map(function(u){return fetchFeed(u,'clothing');});
-
-  Promise.all(techP).then(function(results){
+  // Fetch all 22 live feeds in background
+  var feedP = TSS_FEEDS.map(function(u){return fetchFeed(u);});
+  Promise.all(feedP).then(function(results){
     var items = [];
     results.forEach(function(r){items=items.concat(r);});
+    // Filter to clothing-relevant items only
+    items = items.filter(function(d){return isClothingRelevant(d.title+' '+(d.cat||''));});
     // Deduplicate by title prefix
-    var seen={}; items=items.filter(function(d){var k=d.title.slice(0,35).toLowerCase();if(seen[k])return false;seen[k]=true;return true;});
-    if(items.length>0){techDeals=items;if(tab==='tech') render();}
-  }).catch(function(){});
-
-  Promise.all(clothP).then(function(results){
-    var items = [];
-    results.forEach(function(r){items=items.concat(r);});
-    var seen={}; items=items.filter(function(d){var k=d.title.slice(0,35).toLowerCase();if(seen[k])return false;seen[k]=true;return true;});
-    if(items.length>0){clothDeals=items;if(tab==='clothing') render();}
+    var seen = {};
+    items = items.filter(function(d){
+      var k = d.title.slice(0,35).toLowerCase();
+      if(seen[k]) return false;
+      seen[k] = true;
+      return true;
+    });
+    if(items.length > 0){
+      allDeals = items;
+      render();
+      checkNewProfileDeals(items);
+    }
   }).catch(function(){});
 }
 
-// TOAST
-function toast(msg){
-  var el=document.createElement('div');
-  el.className='toast';el.textContent=msg;
+// ── TOAST ──
+function toast(msg) {
+  var el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
   document.getElementById('toasts').appendChild(el);
   setTimeout(function(){el.remove();},2200);
 }
 
-// INIT
+// ── SUBMIT FIND ──
+function openSubmit() {
+  document.getElementById('sub-modal').classList.add('open');
+  document.getElementById('sub-brand').focus();
+}
+function closeSubmit() {
+  document.getElementById('sub-modal').classList.remove('open');
+  document.getElementById('sub-brand').value='';
+  document.getElementById('sub-url').value='';
+  document.getElementById('sub-note').value='';
+}
+
+// ── INIT ──
 document.addEventListener('DOMContentLoaded', function(){
-  // Store quick links toggle
-  document.getElementById('sl-toggle').addEventListener('click', function(){
+
+  // Store links toggle
+  document.getElementById('sl-toggle').addEventListener('click',function(){
     var pills = document.getElementById('sl-pills');
     var open = pills.style.display === 'none';
     pills.style.display = open ? 'flex' : 'none';
-    this.textContent = '🏪 Shop Direct Sales & Clearance ' + (open ? '▲' : '▼');
+    this.textContent = '🏪 Shop The Standard Brands ' + (open?'▲':'▼');
   });
 
-  // Tabs
-  document.querySelectorAll('.tab').forEach(function(btn){
-    btn.addEventListener('click',function(){
-      document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('on');});
-      btn.classList.add('on');
-      tab=btn.dataset.tab;
-      document.getElementById('tf').style.display=tab==='tech'?'':'none';
-      document.getElementById('cf').style.display=tab==='clothing'?'':'none';
-      document.getElementById('store-links').classList.toggle('show', tab==='clothing');
-      render();
-    });
-  });
-
-  // Chip groups
-  initChips('tt-chips','type',tf);
-  initChips('ts-chips','store',tf);
-  initChips('tp-chips','priceRange',tf);
-  initChips('cs-chips','size',cf);
-  initChips('ct-chips','type',cf);
-  initChips('cp-chips','priceRange',cf);
-
-  // Selects
-  document.getElementById('c-cat').addEventListener('change',function(){cf.cat=this.value;render();});
-  document.getElementById('c-brand').addEventListener('change',function(){cf.brand=this.value;render();});
-  document.getElementById('t-sort').addEventListener('change',function(){tf.sort=this.value;render();});
-  document.getElementById('c-sort').addEventListener('change',function(){cf.sort=this.value;render();});
-
-  // Clear filters
-  document.getElementById('clr-tech').addEventListener('click',function(){
-    tf.type='all';tf.store='all';tf.sort='score';tf.priceRange='all';
-    document.querySelectorAll('#tt-chips .chip,#ts-chips .chip,#tp-chips .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v==='all');});
-    document.getElementById('t-sort').value='score';
+  // Category pills
+  document.getElementById('cats-inner').addEventListener('click',function(e){
+    var pill = e.target.closest('.cat-pill'); if(!pill) return;
+    document.querySelectorAll('.cat-pill').forEach(function(p){p.classList.remove('on');});
+    pill.classList.add('on');
+    activeCat = pill.dataset.cat;
     render();
   });
-  document.getElementById('clr-cloth').addEventListener('click',function(){
-    cf.size='all';cf.cat='all';cf.brand='all';cf.type='all';cf.sort='score';cf.priceRange='all';
-    document.querySelectorAll('#cs-chips .chip,#ct-chips .chip,#cp-chips .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v==='all');});
-    document.getElementById('c-cat').value='all';
-    document.getElementById('c-brand').value='all';
-    document.getElementById('c-sort').value='score';
+
+  // Filter chips
+  initChips('sz-chips','size',f);
+  initChips('tp-chips','type',f);
+  initChips('pr-chips','priceRange',f);
+
+  // Selects
+  document.getElementById('f-brand').addEventListener('change',function(){f.brand=this.value;render();});
+  document.getElementById('f-sort').addEventListener('change',function(){f.sort=this.value;render();});
+
+  // Clear filters
+  document.getElementById('clr-f').addEventListener('click',function(){
+    f.size='all';f.brand='all';f.type='all';f.priceRange='all';f.sort='score';
+    document.querySelectorAll('#sz-chips .chip,#tp-chips .chip,#pr-chips .chip').forEach(function(c){c.classList.toggle('on',c.dataset.v==='all');});
+    document.getElementById('f-brand').value='all';
+    document.getElementById('f-sort').value='score';
     render();
   });
 
@@ -928,16 +1466,16 @@ document.addEventListener('DOMContentLoaded', function(){
 
   // Alert modal
   document.getElementById('al-save').addEventListener('click',function(){
-    var price=parseFloat(document.getElementById('al-input').value);
+    var price = parseFloat(document.getElementById('al-input').value);
     if(!pendingAlert||isNaN(price)) return;
-    als=als.filter(function(a){return a.id!==pendingAlert.id;});
+    als = als.filter(function(a){return a.id!==pendingAlert.id;});
     als.push({id:pendingAlert.id,title:pendingAlert.title,url:pendingAlert.link,targetPrice:price,curPrice:pendingAlert.price});
     saveAls();
     document.getElementById('al-modal').classList.remove('open');
     toast('Alert set 🔔');
-    var bell=document.querySelector('.btn-bell[data-id="'+pendingAlert.id+'"]');
+    var bell = document.querySelector('.btn-bell[data-id="'+pendingAlert.id+'"]');
     if(bell) bell.classList.add('on');
-    pendingAlert=null;
+    pendingAlert = null;
   });
   document.getElementById('al-cancel').addEventListener('click',function(){
     document.getElementById('al-modal').classList.remove('open');pendingAlert=null;
@@ -946,33 +1484,82 @@ document.addEventListener('DOMContentLoaded', function(){
     document.getElementById('al-modal').classList.remove('open');pendingAlert=null;
   });
 
-  // ZIP
-  var zipTimer;
-  document.getElementById('zip').addEventListener('input',function(){
-    clearTimeout(zipTimer);
-    var z=this.value.trim();
-    if(z.length===5&&/^\d{5}$/.test(z)) zipTimer=setTimeout(function(){forwardGeo(z);},700);
+  // Submit FAB
+  document.getElementById('sub-fab').addEventListener('click', openSubmit);
+  document.getElementById('sub-cancel').addEventListener('click', closeSubmit);
+  document.getElementById('sub-overlay').addEventListener('click', closeSubmit);
+  document.getElementById('sub-save').addEventListener('click',function(){
+    var brand = document.getElementById('sub-brand').value.trim();
+    var url   = document.getElementById('sub-url').value.trim();
+    var note  = document.getElementById('sub-note').value.trim();
+    if(!brand||!url){toast('Brand and URL are required.');return;}
+    tss_subs.push({brand:brand,url:url,note:note,ts:Date.now()});
+    localStorage.setItem('tss_subs',JSON.stringify(tss_subs));
+    closeSubmit();
+    toast('Find submitted — respect! 🙌');
   });
 
-  // Auto-refresh every 10 minutes
-  setInterval(function(){ loadDeals(); }, 10 * 60 * 1000);
-  // Tick "last updated X min ago" every 60 seconds
+  // Auto-refresh every 10 min
+  setInterval(function(){loadDeals();}, 10*60*1000);
+  // Tick last-updated every 60s
   setInterval(function(){
-    var mins = Math.round((Date.now() - lastUpdated) / 60000);
+    var mins = Math.round((Date.now()-lastUpdated)/60000);
     var lu = document.getElementById('last-updated');
-    if(lu) lu.textContent = mins <= 0 ? 'Just updated' : mins + 'm ago';
+    if(lu) lu.textContent = mins<=0?'Just updated':mins+'m ago';
   }, 60000);
 
-  // Init
-  document.getElementById('wl-n').textContent=wl.length;
-  checkAlerts();
-  if(navigator.geolocation){
-    navigator.geolocation.getCurrentPosition(
-      function(p){reverseGeo(p.coords.latitude,p.coords.longitude);},
-      function(){document.getElementById('loc-txt').textContent='N/A';}
-    );
+  // Profile button
+  document.getElementById('prof-btn').addEventListener('click', openProfile);
+  document.getElementById('prof-save').addEventListener('click', saveProfile);
+  document.getElementById('prof-skip').addEventListener('click', function(){
+    document.getElementById('prof-modal').classList.remove('open');
+  });
+  document.getElementById('prof-overlay').addEventListener('click', function(){
+    document.getElementById('prof-modal').classList.remove('open');
+  });
+  // Toggle check pills
+  document.getElementById('prof-box').addEventListener('click', function(e){
+    var pill = e.target.closest('.check-pill'); if(!pill) return;
+    pill.classList.toggle('on');
+  });
+
+  // Notification button + banner
+  document.getElementById('notif-btn').addEventListener('click', function(){
+    if(Notification && Notification.permission === 'granted') {
+      toast('Notifications are already enabled 🔔');
+    } else {
+      enableNotifications();
+    }
+  });
+  document.getElementById('notif-enable-btn').addEventListener('click', enableNotifications);
+  document.getElementById('notif-dismiss').addEventListener('click', function(){
+    document.getElementById('notif-banner').classList.remove('open');
+  });
+  // Show notif indicator if already granted
+  if('Notification' in window && Notification.permission === 'granted') {
+    document.getElementById('notif-btn').classList.add('on');
   }
+
+  // Brand rating modal
+  document.getElementById('rate-save').addEventListener('click', saveRating);
+  document.getElementById('rate-cancel').addEventListener('click', function(){
+    document.getElementById('rate-modal').classList.remove('open');
+  });
+  document.getElementById('rate-overlay').addEventListener('click', function(){
+    document.getElementById('rate-modal').classList.remove('open');
+  });
+
+  // Init
+  document.getElementById('wl-n').textContent = wl.length;
+  var badge = document.getElementById('wl-n-badge');
+  if(badge) badge.textContent = wl.length;
+  checkAlerts();
   loadDeals();
+
+  // First-visit profile prompt (after a short delay)
+  if(!tss_profile) {
+    setTimeout(function(){ openProfile(); }, 1200);
+  }
 });
 </script>
 </body>
